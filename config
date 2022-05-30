@@ -1,0 +1,5 @@
+[default]
+bootstrap.servers=localhost:9092
+
+[consumer]
+group.id=kat.test.1
