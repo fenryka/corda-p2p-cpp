@@ -5,7 +5,9 @@
 brew install PkgConfig
 brew install glib
 brew install librdkafka
+brew install nlohmann-json 
 ```
+
 
 # Build
 
@@ -20,6 +22,12 @@ For CLion's version of cmake to apply the above path you need to set it in
 the cmake settings: 
 
 <img src="clion-1.png" />
+
+# Binaries
+
+## example-1
+
+Simple producer/consumer
 
 
 

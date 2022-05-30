@@ -24,47 +24,14 @@ if(APPLE)
     link_directories (/usr/local/lib)
 endif()
 
-#
-# If you need to have openssl@1.1 first in your PATH run:
-# echo 'export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"' >> ~/.zshrc
-#
-# For compilers to find openssl@1.1 you may need to set:
-# export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
-# export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
-#
-# For pkg-config to find openssl@1.1 you may need to set:
-# export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig
-#
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(KAFKA REQUIRED rdkafka++)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 
-
-set (producer-exe producer)
-set (consumer-exe consumer)
-
-set (producer-sources
-        common.cxx
-        producer.cxx)
-
-set (consumer-sources
-        common.cxx
-        consumer.cxx)
-
-add_executable (${producer-exe} ${producer-sources})
-
-target_compile_features(${producer-exe} PUBLIC cxx_std_17)
-target_compile_features(${producer-exe} PUBLIC c_std_99)
-
-target_include_directories(${producer-exe} PUBLIC ${GLIB_INCLUDE_DIRS} ${KAFKA_INCLUDE_DIRS})
-target_link_libraries (${producer-exe} ${KAFKA_LIBRARIES} ${GLIB_LIBRARIES})
-
-add_executable (${consumer-exe} ${consumer-sources})
-
-target_compile_features(${consumer-exe} PUBLIC cxx_std_17)
-target_compile_features(${consumer-exe} PUBLIC c_std_99)
-
-target_include_directories(${consumer-exe} PUBLIC ${GLIB_INCLUDE_DIRS} ${KAFKA_INCLUDE_DIRS})
-target_link_libraries (${consumer-exe} ${KAFKA_LIBRARIES} ${GLIB_LIBRARIES})
+ADD_SUBDIRECTORY(example-1)
+ADD_SUBDIRECTORY(lib)
