@@ -1,4 +1,8 @@
+```
+brew install PkgConfig
+brew install glib
 brew install librdkafka
+```
 
 If you need to have openssl@1.1 first in your PATH run:
   echo 'export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"' >> ~/.zshrc
