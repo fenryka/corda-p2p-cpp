@@ -1,6 +1,6 @@
 #include <glib.h>
-//#include <librdkafka/rdkafka.h>
 #include <librdkafka/rdkafkacpp.h>
+#include <iostream>
 
 
 #include "common.cxx"
@@ -11,48 +11,45 @@
  * when a message has been successfully delivered or permanently
  * failed delivery (after retries).
  */
-static void dr_msg_cb (rd_kafka_t *kafka_handle,
-                       const rd_kafka_message_t *rkmessage,
-                       void *opaque) {
-    if (rkmessage->err) {
-        g_error("Message delivery failed: %s", rd_kafka_err2str(rkmessage->err));
+
+class DR_MSG_CB : public RdKafka::DeliveryReportCb {
+public :
+    void dr_cb (RdKafka::Message &message) override {
+        if (message.err()) {
+            g_error("Message delivery failed: %s", message.errstr().c_str());
+        }
     }
-}
+};
 
 int main (int argc, char **argv) {
-    rd_kafka_t *producer;
-    rd_kafka_conf_t *conf;
-    char errstr[512];
+    std::string errstr;
 
-    // Parse the command line.
     if (argc != 2) {
         g_error("Usage: %s <config.ini>", argv[0]);
-        return 1;
     }
 
-    // Parse the configuration.
-    // See https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
     const char *config_file = argv[1];
 
-    g_autoptr(GError) error = nullptr;
     g_autoptr(GKeyFile) key_file = g_key_file_new();
-    if (!g_key_file_load_from_file (key_file, config_file, G_KEY_FILE_NONE, &error)) {
-        g_error ("Error loading config file: %s", error->message);
-        return 1;
+    {
+        g_autoptr(GError) error = nullptr;
+        if (!g_key_file_load_from_file(key_file, config_file, G_KEY_FILE_NONE, &error)) {
+            g_error ("Error loading config file: %s", error->message);
+        }
     }
 
     // Load the relevant configuration sections.
-    conf = rd_kafka_conf_new();
-    load_config_group(conf, key_file, "default");
+    auto conf = RdKafka::Conf::create(RdKafka::Conf::ConfType::CONF_GLOBAL);
+    load_config_group(*conf, *key_file, "default");
 
-    // Install a delivery-error callback.
-    rd_kafka_conf_set_dr_msg_cb(conf, dr_msg_cb);
+    // Install a delivery-error callback
+    DR_MSG_CB dr_msg_cb;
+    conf->set ("dr_cb", &dr_msg_cb, errstr);
 
     // Create the Producer instance.
-    producer = rd_kafka_new(RD_KAFKA_PRODUCER, conf, errstr, sizeof(errstr));
+    auto producer = RdKafka::Producer::create(conf, errstr);
     if (!producer) {
-        g_error("Failed to create new producer: %s", errstr);
-        return 1;
+        g_error("Failed to create new producer: %s", errstr.c_str());
     }
 
     // Configuration object is now owned, and freed, by the rd_kafka_t instance.
@@ -60,7 +57,7 @@ int main (int argc, char **argv) {
 
     // Produce data by selecting random values from these lists.
     int message_count = 10;
-    const char *topic = "kat-test";
+    const char *topic = "kat.test.1";
     const char *user_ids[6] = {"eabara", "jsmith", "sgarcia", "jbernard", "htanaka", "awalther"};
     const char *products[5] = {"book", "alarm clock", "t-shirts", "gift card", "batteries"};
 
@@ -70,37 +67,29 @@ int main (int argc, char **argv) {
         size_t key_len = strlen(key);
         size_t value_len = strlen(value);
 
-        rd_kafka_resp_err_t err;
+        auto ktopic = RdKafka::Topic::create(producer, topic, conf, errstr);
+        auto err = producer->produce(ktopic, RdKafka::Topic::PARTITION_UA,
+                          RdKafka::Producer::RK_MSG_COPY,
+                                     (void *)value, value_len,
+                                     (const void *)key, key_len,
+                          nullptr
+        );
 
-        err = rd_kafka_producev(producer,
-                                RD_KAFKA_V_TOPIC(topic),
-                                RD_KAFKA_V_MSGFLAGS(RD_KAFKA_MSG_F_COPY),
-                                RD_KAFKA_V_KEY((void*)key, key_len),
-                                RD_KAFKA_V_VALUE((void*)value, value_len),
-                                RD_KAFKA_V_OPAQUE(NULL),
-                                RD_KAFKA_V_END);
-
-        if (err) {
-            g_error("Failed to produce to topic %s: %s", topic, rd_kafka_err2str(err));
-            return 1;
-        } else {
-            g_message("Produced event to topic %s: key = %12s value = %12s", topic, key, value);
+        if (err != RdKafka::ERR_NO_ERROR) {
+            std::cerr << "FUCK" << std::endl;
         }
 
-        rd_kafka_poll(producer, 0);
+        producer->poll(0);
     }
 
     // Block until the messages are all sent.
     g_message("Flushing final messages..");
-    rd_kafka_flush(producer, 10 * 1000);
-
-    if (rd_kafka_outq_len(producer) > 0) {
-        g_error("%d message(s) were not delivered", rd_kafka_outq_len(producer));
+    producer->flush(10 * 1000);
+    if (producer->outq_len() > 0) {
+        g_error("%d message(s) were not delivered", producer->outq_len());
     }
 
     g_message("%d events were produced to topic %s.", message_count, topic);
-
-    rd_kafka_destroy(producer);
 
     return 0;
 }
