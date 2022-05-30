@@ -1,16 +1,7 @@
 #!/bin/bash
 
-function cmake_rem_func {
-
-    rm -f $1/CMakeCache.txt
-    rm $1/Makefile
-    rm $1/cmake_install.cmake
-    rm -rf $1/CMakeFiles
-}
-
-rm -f BLOB-INSPECTOR.cbp
 rm -rf cmake-build-debug
-
+rm -rf cmake-build-debug-event-trace/
 
 for x in `find . -name CMakeFiles -type d`; do
     rm -rf $x
@@ -27,3 +18,4 @@ done
 for x in `find . -name CMakeCache.txt`; do
     rm -f $x
 done
+
