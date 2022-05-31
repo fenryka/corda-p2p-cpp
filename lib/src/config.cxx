@@ -12,7 +12,7 @@ parse (
 ) {
     auto kconf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
 
-    if (!config_.contains("key_")) {
+    if (!config_.contains(key_)) {
         std::cerr << "Cannot find key " << key_ << std::endl;
         std::cerr <<config_.dump() << std::endl;
         throw std::runtime_error ("Cannot find key");
