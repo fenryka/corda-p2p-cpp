@@ -3,3 +3,8 @@
 cmake-build-debug-event-trace
 cmake-build-debug
 Makefile
+CMakeFiles
+CORDA-P2P-CPP.cbp
+*.cmake
+CMakeCache.txt
+Testing/
