@@ -31,7 +31,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(KAFKA REQUIRED rdkafka++)
-pkg_check_modules(GLIB REQUIRED glib-2.0)
 
 ADD_SUBDIRECTORY(example-1)
 ADD_SUBDIRECTORY(lib)

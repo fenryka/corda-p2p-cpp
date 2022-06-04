@@ -1,5 +1,6 @@
 #include <glib.h>
 #include <librdkafka/rdkafkacpp.h>
+#include <stdexcept>
 
 static void
 load_config_group(

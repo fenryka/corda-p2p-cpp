@@ -2,6 +2,7 @@
 #include <librdkafka/rdkafkacpp.h>
 #include <iostream>
 
+#include <bsd/stdlib.h>
 
 #include "common.cxx"
 
