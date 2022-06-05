@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.14)
 
 # Want to be able to use the new method of setting the project version
 CMAKE_POLICY (SET CMP0048 NEW)

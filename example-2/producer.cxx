@@ -1,12 +1,12 @@
 #include <librdkafka/rdkafkacpp.h>
+#include <nlohmann/json.hpp>
+
 #include <iostream>
 #include <sstream>
-#include <nlohmann/json.hpp>
+#include <fstream>
 
 #if defined __linux__
     #include <bsd/stdlib.h> // NOLINT - shut clang up about depricated headers
-#include <fstream>
-
 #endif
 
 #include "config.h"

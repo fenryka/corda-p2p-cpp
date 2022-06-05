@@ -1,4 +1,3 @@
-#include <glib.h>
 #include <librdkafka/rdkafkacpp.h>
 #include <fstream>
 #include <nlohmann/json.hpp>
