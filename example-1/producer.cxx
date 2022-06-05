@@ -2,7 +2,9 @@
 #include <librdkafka/rdkafkacpp.h>
 #include <iostream>
 
-#include <bsd/stdlib.h>
+#if defined __linux__
+    #include <bsd/stdlib.h> // NOLINT - shut clang up about depricated headers
+#endif
 
 #include "common.cxx"
 

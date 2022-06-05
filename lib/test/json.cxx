@@ -5,8 +5,6 @@
 
 using json = nlohmann::json;
 
-
-
 TEST (typeName, test1) { // NOLINT
 
     auto config = R"({
