@@ -12,5 +12,6 @@ namespace RdKafka {
 namespace corda::p2p::config {
 
     RdKafka::Conf * parse (const std::string &, const nlohmann::json &);
+    void parse (RdKafka::Conf &, const std::string &, const nlohmann::json &);
 
 }

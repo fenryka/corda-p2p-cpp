@@ -1,8 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
 
 # Want to be able to use the new method of setting the project version
 CMAKE_POLICY (SET CMP0048 NEW)
-
-CMAKE_MINIMUM_REQUIRED (VERSION 3.10)
 
 PROJECT (CORDA-P2P-CPP VERSION 0.0.1)
 
@@ -33,4 +32,5 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(KAFKA REQUIRED rdkafka++)
 
 ADD_SUBDIRECTORY(example-1)
+ADD_SUBDIRECTORY(example-2)
 ADD_SUBDIRECTORY(lib)
