@@ -58,7 +58,7 @@ int main (int argc, char **argv) {
 
     // Produce data by selecting random values from these lists.
     int message_count = 10;
-    const char *topic = "kat.test.1";
+    const char *topic = "my-topic-1";
     const char *user_ids[6] = {"eabara", "jsmith", "sgarcia", "jbernard", "htanaka", "awalther"};
     const char *products[5] = {"book", "alarm clock", "t-shirts", "gift card", "batteries"};
 

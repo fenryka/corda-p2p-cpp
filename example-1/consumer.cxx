@@ -42,7 +42,7 @@ int main (int argc, char **argv) {
         g_error("Failed to create new consumer: %s", errstr.c_str());
     }
 
-    auto err = consumer->subscribe({ "kat.test.1"});
+    auto err = consumer->subscribe({ "my-topic-1"});
 
     if (err != RdKafka::ERR_NO_ERROR) {
         g_error("Failed to subscribe");
