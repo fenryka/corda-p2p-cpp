@@ -1,5 +1,6 @@
 #include <librdkafka/rdkafkacpp.h>
 #include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
 
 #include "config.h"
@@ -18,7 +19,8 @@ int main (int argc, char **argv) {
 
     // Parse the command line.
     if (argc != 2) {
-        g_error("Usage: %s <config.json>", argv[0]);
+        std::cerr << "Usage: " << *argv << " <config.json>" << std::endl;
+        return EXIT_FAILURE;
     }
 
     std::ifstream config_file (*(argv + 1));
@@ -33,15 +35,16 @@ int main (int argc, char **argv) {
     auto consumer = RdKafka::KafkaConsumer::create(conf,errstr);
 
     if (!consumer) {
-        g_error("Failed to create new consumer: %s", errstr.c_str());
+        std::cerr << "Failed to create new consumer: " << errstr << std::endl;
+        return EXIT_FAILURE;
     }
 
     auto err = consumer->subscribe({ "my-topic-1"});
 
     if (err != RdKafka::ERR_NO_ERROR) {
-        g_error("Failed to subscribe");
+        std::cerr << "Failed to subscribe" << std::endl;
+        return EXIT_FAILURE;
     }
-
 
     // Install a signal handler for clean shutdown.
     signal(SIGINT, stop);
@@ -51,23 +54,21 @@ int main (int argc, char **argv) {
         auto msg = consumer->consume(500);
         if (msg->err() != RdKafka::ERR_NO_ERROR) {
             if (msg->err() == RdKafka::ERR__TIMED_OUT) {
-                g_message("Waiting...");
+                std::cout << "Waiting..." << std::endl;
                 continue;
             } else if (msg->err() == RdKafka::ERR__PARTITION_EOF) {
                 /* We can ignore this error - it just means we've read
                    everything and are waiting for more data */
                 continue;
             } else {
-                g_message("Consumer error: %s", msg->errstr().c_str());
+                std::cerr << "Consumer error: " << msg->errstr() << std::endl;
                 return 1;
             }
        } else {
-
-           g_message("Consumed event from topic %s: key = %s value = %s",
-                     msg->topic_name().c_str(),
-                     msg->key()->c_str(),
-                     (char *)msg->payload()
-           );
+            std::cout
+                << "Consumed event from topic "
+                << msg->topic_name() << ": key = " << msg->key()
+                << " value = " << (char *)msg->payload() << std::endl;
        }
 
         // Free the message when we're done.
@@ -75,8 +76,8 @@ int main (int argc, char **argv) {
     }
 
     // Close the consumer: commit final offsets and leave the group.
-    g_message( "Closing consumer");
+    std::cout << "Closing consumer" << std::endl;
     consumer->close();
 
-    return 0;
+    return EXIT_SUCCESS;
 }

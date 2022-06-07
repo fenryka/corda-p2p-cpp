@@ -47,7 +47,9 @@ int main (int argc, char **argv) {
 
     // Install a delivery-error callback
     DR_MSG_CB dr_msg_cb;
-    conf->set ("dr_cb", &dr_msg_cb, errstr);
+    if (conf->set ("dr_cb", &dr_msg_cb, errstr) != RdKafka::Conf::CONF_OK) {
+        g_error ("Failed to set dr_cb - %s", errstr.c_str());
+    }
 
     // Create the Producer instance.
     auto producer = RdKafka::Producer::create(conf, errstr);
@@ -79,7 +81,7 @@ int main (int argc, char **argv) {
         );
 
         if (err != RdKafka::ERR_NO_ERROR) {
-            std::cerr << "FUCK" << std::endl;
+            g_error ("Produce failed - %i", err);
         }
 
         producer->poll(0);

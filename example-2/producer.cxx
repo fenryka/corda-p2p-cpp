@@ -80,8 +80,9 @@ int main (int argc, char **argv) {
     // Block until the messages are all sent.
     std::cout << "Flushing final messages.." << std::endl;
     producer->flush(10 * 1000);
+
     if (producer->outq_len() > 0) {
-        std::cerr << producer->outq_len() << "message(s) were not delivered" << std::endl;
+        std::cerr << producer->outq_len() << " message(s) were not delivered" << std::endl;
     }
 
     std::cout << message_count << " events were produced to topic " << topic << "." << std::endl;
