@@ -1,1 +1,5 @@
 libcorda-p2p.dylib
+
+# Generated files
+avro.asvc
+avro.h

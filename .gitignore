@@ -9,3 +9,4 @@ CORDA-P2P-CPP.cbp
 CMakeCache.txt
 Testing/
 cmake-ide
+_deps
