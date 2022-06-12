@@ -5,6 +5,7 @@ set (libname corda-p2p)
 set (source-files
         config.cxx
         avro.cxx
+        identity.cxx
         X500.cxx
         )
 
