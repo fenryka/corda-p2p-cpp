@@ -34,7 +34,7 @@ export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
 For CLion's version of cmake to apply the above path you need to set it in
 the cmake settings: 
 
-<img src="clion-1.png" />
+<img src="./clion-1.png"  alt="meh" />
 
 # Binaries
 

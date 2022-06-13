@@ -4,6 +4,7 @@
 #include <librdkafka/rdkafkacpp.h>
 #include <iostream>
 
+#include "debug.h"
 
 void
 corda::p2p::config::
@@ -14,9 +15,11 @@ parse (
 ) {
 
     if (!config_.contains(key_)) {
-        std::cerr << "Cannot find key " << key_ << std::endl;
-        std::cerr <<config_.dump() << std::endl;
-        throw std::runtime_error ("Cannot find key");
+        std::stringstream ss;
+        ss << "Cannot find key: \"" << key_ << "\"" << std::endl;
+        DBG (ss.str()); // NOLINT
+
+        throw std::runtime_error (ss.str());
     }
 
     for (auto & [k, v]: config_[key_].items()) {

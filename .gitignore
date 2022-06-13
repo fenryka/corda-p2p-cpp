@@ -1,5 +1,7 @@
+# JetBrains cruft
 .idea
 
+# CMake cruft
 cmake-build-debug-event-trace
 cmake-build-debug
 Makefile
@@ -7,5 +9,11 @@ CMakeFiles
 CORDA-P2P-CPP.cbp
 *.cmake
 CMakeCache.txt
+<<<<<<< Updated upstream
 Testing/
 cmake-ide
+=======
+cmake_install.cmake
+Testing
+
+>>>>>>> Stashed changes

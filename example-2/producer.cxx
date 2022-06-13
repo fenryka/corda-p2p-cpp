@@ -33,7 +33,8 @@ int main (int argc, char **argv) {
     std::ifstream config_file (*(argv + 1));
     nlohmann::json jconf;
     config_file >> jconf;
-    auto conf = corda::p2p::config::parse("default", jconf);
+    std::cout << jconf.dump(2);
+    auto conf = corda::p2p::config::parse ("default", jconf);
 
     // Install a delivery-error callback
     DR_MSG_CB dr_msg_cb;

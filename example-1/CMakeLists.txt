@@ -12,6 +12,8 @@ set (consumer-sources
         common.cxx
         consumer.cxx)
 
+message(STATUS "KAFKA_LIBRARIES = ${KAFKA_LIBRARIES}")
+
 add_executable (${producer-exe} ${producer-sources})
 
 target_compile_features(${producer-exe} PUBLIC cxx_std_17)

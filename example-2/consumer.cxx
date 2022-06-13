@@ -3,6 +3,8 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
+#include <iostream>
+
 #include "config.h"
 
 static volatile sig_atomic_t run = 1;
@@ -15,8 +17,6 @@ static void stop([[maybe_unused]]int sig) {
 }
 
 int main (int argc, char **argv) {
-    std::string errstr;
-
     // Parse the command line.
     if (argc != 2) {
         std::cerr << "Usage: " << *argv << " <config.json>" << std::endl;
@@ -31,17 +31,16 @@ int main (int argc, char **argv) {
     auto conf = corda::p2p::config::parse("default", jconf);
     corda::p2p::config::parse (*conf, "consumer", jconf);
 
+    std::string errstr;
     // Create the Consumer instance.
     auto consumer = RdKafka::KafkaConsumer::create(conf,errstr);
 
     if (!consumer) {
-        std::cerr << "Failed to create new consumer: " << errstr << std::endl;
+        std::cerr << "Failed to create new consumer: " << errstr.c_str() << std::endl;
         return EXIT_FAILURE;
     }
 
-    auto err = consumer->subscribe({ "my-topic-1"});
-
-    if (err != RdKafka::ERR_NO_ERROR) {
+    if (consumer->subscribe({ "my-topic-1"}) != RdKafka::ERR_NO_ERROR) {
         std::cerr << "Failed to subscribe" << std::endl;
         return EXIT_FAILURE;
     }
@@ -62,13 +61,14 @@ int main (int argc, char **argv) {
                 continue;
             } else {
                 std::cerr << "Consumer error: " << msg->errstr() << std::endl;
-                return 1;
+                return EXIT_FAILURE;
             }
        } else {
             std::cout
                 << "Consumed event from topic "
                 << msg->topic_name() << ": key = " << msg->key()
                 << " value = " << (char *)msg->payload() << std::endl;
+
        }
 
         // Free the message when we're done.

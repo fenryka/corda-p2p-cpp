@@ -21,4 +21,5 @@ ENDIF()
 
 add_executable (${EXE} ${sources})
 
-target_link_libraries (${EXE} ${libs} ${THREAD_LIB})
+target_link_libraries (${EXE} ${libs} ${THREAD_LIB} ${KAFKA_LIBRARIES})
+target_include_directories(${EXE} PUBLIC ${KAFKA_INCLUDE_DIRS})
