@@ -9,11 +9,8 @@ CMakeFiles
 CORDA-P2P-CPP.cbp
 *.cmake
 CMakeCache.txt
-<<<<<<< Updated upstream
 Testing/
 cmake-ide
-=======
 cmake_install.cmake
 Testing
-
->>>>>>> Stashed changes
+_deps
