@@ -1,4 +1,4 @@
-libcorda-p2p.dylib
+*.dylib
 
 # Generated files
 avro.asvc
