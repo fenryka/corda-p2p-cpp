@@ -49,7 +49,7 @@ services:
       - zoo2
       - zoo3
     ports:
-      - "${EXT_OFFSET}9092:9092"
+      - "${EXT_OFFSET}9092:${EXT_OFFSET}9092"
     expose:
       - '9093'
     environment:
@@ -67,7 +67,7 @@ services:
       - zoo2
       - zoo3
     ports:
-      - "${EXT_OFFSET}9094:9094"
+      - "${EXT_OFFSET}9094:${EXT_OFFSET}9094"
     expose:
       - '9095'
     environment:
@@ -85,7 +85,7 @@ services:
       - zoo2
       - zoo3
     ports:
-      - "${EXT_OFFSET}9096:9096"
+      - "${EXT_OFFSET}9096:${EXT_OFFSET}9096"
     expose:
       - '9097'
     environment:
