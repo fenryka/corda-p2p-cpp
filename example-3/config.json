@@ -1,0 +1,28 @@
+{
+  "kafka": {
+    "default": {
+      "bootstrap.servers": "localhost:9092"
+    },
+    "alice": {
+      "group.id": "alice-group"
+    },
+    "bob": {
+      "group.id": "bob-group"
+    },
+    "claire": {
+      "group.id": "claire-group"
+    }
+  },
+  "alice" : {
+    "topic-in" : "alice",
+    "topic-out" : [ "bob", "claire" ]
+  },
+  "bob" : {
+    "topic-in" : "bob",
+    "topic-out" : [ "alice", "claire" ]
+  },
+  "claire" : {
+    "topic-in" : "claire",
+    "topic-out" : [ "bob", "alice" ]
+  }
+}

@@ -5,6 +5,7 @@ set (libname corda-p2p)
 set (source-files
         config.cxx
         avro.cxx
+        identity.cxx
         X500.cxx
         )
 
@@ -67,12 +68,12 @@ ADD_LIBRARY (${libname} SHARED ${source-files} avro.h)
 target_include_directories(${libname} PUBLIC ${KAFKA_INCLUDE_DIRS})
 target_link_libraries (${libname} ${KAFKA_LIBRARIES} avrocpp)
 
-SET_TARGET_PROPERTIES (${libName} PROPERTIES VERSION ${PROJECT_VERSION})
-SET_TARGET_PROPERTIES (${libName} PROPERTIES SOVERSION 1)
-SET_TARGET_PROPERTIES (${libName} PROPERTIES PUBLIC_HEADER include/config.h)
+SET_TARGET_PROPERTIES (${libname} PROPERTIES VERSION ${PROJECT_VERSION})
+SET_TARGET_PROPERTIES (${libname} PROPERTIES SOVERSION 1)
+SET_TARGET_PROPERTIES (${libname} PROPERTIES PUBLIC_HEADER include/config.h)
 
 message(STATUS "KAFKA_LIBRARIES = ${KAFKA_LIBRARIES}")
-target_include_directories(${libName} PUBLIC ${KAFKA_INCLUDE_DIRS})
+target_include_directories(${libname} PUBLIC ${KAFKA_INCLUDE_DIRS})
 
-target_link_libraries (${libName} ${KAFKA_LIBRARIES})
+target_link_libraries (${libname} ${KAFKA_LIBRARIES})
 

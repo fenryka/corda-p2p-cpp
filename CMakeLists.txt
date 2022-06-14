@@ -33,4 +33,5 @@ pkg_check_modules(KAFKA REQUIRED rdkafka++)
 
 ADD_SUBDIRECTORY(example-1)
 ADD_SUBDIRECTORY(example-2)
+ADD_SUBDIRECTORY(example-3)
 ADD_SUBDIRECTORY(lib)

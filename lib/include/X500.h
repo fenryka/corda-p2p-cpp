@@ -11,7 +11,7 @@
  * C=country
  */
 
-namespace corda { namespace p2p { namespace identity {
+namespace corda::p2p::identity {
 
     class X500 {
     private :
@@ -25,12 +25,12 @@ namespace corda { namespace p2p { namespace identity {
     public :
         X500();
 
-        const std::string & commonName() const;
-        const std::string & organizationUnit() const;
-        const std::string & organizationName() const;
-        const std::string & localityName() const;
-        const std::string & stateName() const;
-        const std::string & country() const;
+        [[nodiscard]] const std::string & commonName() const;
+        [[nodiscard]] const std::string & organizationUnit() const;
+        [[nodiscard]] const std::string & organizationName() const;
+        [[nodiscard]] const std::string & localityName() const;
+        [[nodiscard]] const std::string & stateName() const;
+        [[nodiscard]] const std::string & country() const;
 
         std::string name() const;
 
@@ -42,4 +42,4 @@ namespace corda { namespace p2p { namespace identity {
         void country(const std::string &);
     };
 
-} } }
+}

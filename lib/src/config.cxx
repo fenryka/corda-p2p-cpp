@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "debug.h"
+/**********************************************************************************************************************/
 
 void
 corda::p2p::config::
@@ -14,15 +15,19 @@ parse (
         const nlohmann::json & config_
 ) {
 
-    if (!config_.contains(key_)) {
+    if (!config_.contains("kafka")) {
+        throw std::runtime_error ("Config file contains no kafka settings");
+    }
+
+    if (!config_["kafka"].contains(key_)) {
         std::stringstream ss;
         ss << "Cannot find key: \"" << key_ << "\"" << std::endl;
         DBG (ss.str()); // NOLINT
 
-        throw std::runtime_error (ss.str());
+        throw std::runtime_error ("Cannot find key");
     }
 
-    for (auto & [k, v]: config_[key_].items()) {
+    for (auto & [k, v]: config_["kafka"][key_].items()) {
         std::string err;
         auto result = kconf_.set(k, v, err);
 
@@ -31,6 +36,8 @@ parse (
         }
     }
 }
+
+/**********************************************************************************************************************/
 
 RdKafka::Conf *
 corda::p2p::config::
@@ -43,3 +50,5 @@ parse (
     parse(*kconf, key_, config_);
     return kconf;
 }
+
+/**********************************************************************************************************************/
