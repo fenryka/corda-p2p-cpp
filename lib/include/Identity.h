@@ -16,6 +16,8 @@ namespace corda::p2p::identity {
         explicit Identity (std::unique_ptr<X500> &);
 
 
+
+
     };
 
 }

@@ -7,7 +7,8 @@ set (source-files
         avro.cxx
         identity.cxx
         X500.cxx
-        )
+        Message.cxx
+        ../include/Message.h ../include/Message.h)
 
 #
 # Where Corda keeps the P2P avro specs. This URL should always be the latest version of the API, we can worry about
