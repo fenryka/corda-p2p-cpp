@@ -15,9 +15,7 @@ namespace corda::p2p::identity {
     public:
         explicit Identity (std::unique_ptr<X500> &);
 
-
-
-
+        [[nodiscard]] std::string name() const;
     };
 
 }
