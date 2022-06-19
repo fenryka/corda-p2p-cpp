@@ -4,16 +4,22 @@
 #include "Identity.h"
 
 #include "avro/Encoder.hh"
+
+/*
+ * Our Auto Generated header based on the AVRO schema
+ */
 #include "avro.h"
 
 /**********************************************************************************************************************/
 
 corda::p2p::messaging::
 Message::Message (
+        const avro::ValidSchema & schema_,
         std::string  key_,
         const std::string & payload_,
         const corda::p2p::identity::Identity & source_)
-    : m_key(std::move(key_))
+    : m_schema { schema_ }
+    , m_key (std::move(key_))
     , m_payload { payload_.begin(), payload_.end() }
     , m_source { source_ }
 {
@@ -27,7 +33,7 @@ corda::p2p::messaging::
 Message::encode(const corda::p2p::identity::Identity & dest_) {
     std::unique_ptr <avro::OutputStream> out = avro::memoryOutputStream();
 
-    avro::EncoderPtr e = avro::binaryEncoder();
+    avro::EncoderPtr e = avro::jsonEncoder (m_schema);
     e->init (*out);
 
     corda_p2p::AppMessage am;
@@ -41,13 +47,21 @@ Message::encode(const corda::p2p::identity::Identity & dest_) {
 
     unAuthMessageHeader.destination = to;
     unAuthMessageHeader.source = from;
+    unAuthMessageHeader.subsystem = "subsystem";
 
     unAuthMessage.header = unAuthMessageHeader;
     unAuthMessage.payload = m_payload;
 
     am.message.set_UnauthenticatedMessage(unAuthMessage);
 
-    avro::encode(*e, am);
+    try {
+        avro::encode(*e, am);
+    } catch (const std::exception & e) {
+        std::cout << e.what() << std::endl;
+        throw e;
+    }
+
+    std::cout << out << std::endl;
 
     return out;
 }

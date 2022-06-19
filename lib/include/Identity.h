@@ -2,9 +2,7 @@
 
 #include <memory>
 
-namespace corda::p2p::identity {
-    class X500;
-}
+#include <X500.h>
 
 namespace corda::p2p::identity {
 
@@ -14,6 +12,7 @@ namespace corda::p2p::identity {
 
     public:
         explicit Identity (std::unique_ptr<X500> &);
+        explicit Identity (const std::string &_);
 
         [[nodiscard]] std::string name() const;
     };

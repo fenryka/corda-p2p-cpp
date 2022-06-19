@@ -8,7 +8,7 @@ set (source-files
         identity.cxx
         X500.cxx
         Message.cxx
-        ../include/Message.h ../include/Message.h)
+        MessageFactory.cxx)
 
 #
 # Where Corda keeps the P2P avro specs. This URL should always be the latest version of the API, we can worry about
@@ -58,7 +58,7 @@ add_custom_command (
 
 add_custom_command(
         OUTPUT avro.h
-        DEPENDS avro.asvc
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/avro.asvc
         COMMAND avrogencpp -n corda_p2p -i avro.asvc -o avro.h
         COMMENT
             "Building avro header"

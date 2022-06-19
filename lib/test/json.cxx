@@ -6,11 +6,13 @@ using json = nlohmann::json;
 
 TEST (json, defaultSection) { // NOLINT
     auto config = R"({
-        "default": {
-            "bootstrap.servers" : "localhost:10002"
-        },
-        "consumer": {
-            "group.id" : "kat.test.1"
+        "kafka" : {
+            "default": {
+                "bootstrap.servers" : "localhost:10002"
+            },
+            "consumer": {
+                "group.id" : "kat.test.1"
+            }
         }
     })";
 

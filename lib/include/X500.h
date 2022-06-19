@@ -3,6 +3,8 @@
 #include <string>
 
 /*
+ * Because I *always* forget the abreviations
+ *
  * CN=commonName
  * OU=organizationUnit
  * O=organizationName
@@ -24,15 +26,21 @@ namespace corda::p2p::identity {
 
     public :
         X500();
+        explicit X500 (const std::string &);
 
-        [[nodiscard]] const std::string & commonName() const;
-        [[nodiscard]] const std::string & organizationUnit() const;
-        [[nodiscard]] const std::string & organizationName() const;
-        [[nodiscard]] const std::string & localityName() const;
-        [[nodiscard]] const std::string & stateName() const;
-        [[nodiscard]] const std::string & country() const;
+        [[maybe_unused]] [[nodiscard]] const std::string & commonName() const;
 
-        std::string name() const;
+        [[maybe_unused]] [[nodiscard]] const std::string & organizationUnit() const;
+
+        [[maybe_unused]] [[nodiscard]] const std::string & organizationName() const;
+
+        [[maybe_unused]] [[nodiscard]] const std::string & localityName() const;
+
+        [[maybe_unused]] [[nodiscard]] const std::string & stateName() const;
+
+        [[maybe_unused]] [[nodiscard]] const std::string & country() const;
+
+        [[nodiscard]] std::string name() const;
 
         void commonName(const std::string &);
         void organizationUnit(const std::string &);

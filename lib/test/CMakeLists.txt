@@ -6,7 +6,9 @@ set (sources
         main.cxx
         json.cxx
         avro.cxx
+        X500.cxx
         X500Support.cxx
+        MessageTests.cxx
         )
 
 set (libs

@@ -1,0 +1,13 @@
+{
+  "kafka" : {
+    "default" : {
+      "bootstrap.servers": "localhost:19092"
+    },
+    "group": {
+      "group.id": "alice-group"
+    }
+  },
+  "name" : "alice",
+  "x500name": "O=Alice, L=London, C=GB",
+  "to" : "O=Chip, L=London, C=GB"
+}

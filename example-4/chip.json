@@ -1,0 +1,12 @@
+{
+  "kafka": {
+    "default": {
+      "bootstrap.servers": "localhost:29092"
+    },
+    "group": {
+      "group.id": "chip-group"
+    }
+  },
+  "x500name": "O=Chip, L=London, C=GB",
+  "name": "chip"
+}

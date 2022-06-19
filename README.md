@@ -42,8 +42,14 @@ This is a C++ client library for the Corda P2P layer. As such, unsurprisingly, w
     ```shell
     cd corda-runtime-os
     ```
+
+3. Switch to the QA'd branch
+
+   ```shell
+   git checkout p2p-preview
+   ```
    
-3. Build the parts we need
+5. Build the parts we need
 
     ```shell
     ./gradlew \
