@@ -23,7 +23,7 @@ Message::Message (
     , m_payload { payload_.begin(), payload_.end() }
     , m_source { source_ }
 {
-
+//    std::cout << schema_.toJson(true) << std::endl;
 }
 
 /**********************************************************************************************************************/
@@ -43,7 +43,9 @@ Message::encode(const corda::p2p::identity::Identity & dest_) {
     corda_p2p::HoldingIdentity to;
 
     from.x500Name = m_source.name();
+    from.groupId = "group1";
     to.x500Name = dest_.name();
+    to.groupId = "group1";
 
     unAuthMessageHeader.destination = to;
     unAuthMessageHeader.source = from;
@@ -57,11 +59,9 @@ Message::encode(const corda::p2p::identity::Identity & dest_) {
     try {
         avro::encode(*e, am);
     } catch (const std::exception & e) {
-        std::cout << e.what() << std::endl;
+        std::cout << "ERROR: " << e.what() << std::endl;
         throw e;
     }
-
-    std::cout << out << std::endl;
 
     return out;
 }

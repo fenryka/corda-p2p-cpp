@@ -9,6 +9,7 @@ set (sources
         X500.cxx
         X500Support.cxx
         MessageTests.cxx
+        ../src/SchemaBuilder.cxx
         )
 
 set (libs
@@ -30,3 +31,21 @@ target_compile_features(${EXE} PRIVATE cxx_std_17)
 
 target_link_libraries (${EXE} ${libs} ${THREAD_LIB} ${KAFKA_LIBRARIES})
 target_include_directories(${EXE} PUBLIC ${KAFKA_INCLUDE_DIRS})
+
+add_custom_command(
+        TARGET ${EXE}
+        DEPENDS ASCV
+        COMMAND
+            cp ${CMAKE_CURRENT_SOURCE_DIR}/../src/avro.asvc .
+        COMMENT
+            "Fetch corda avro spec"
+)
+
+add_custom_command(
+        TARGET ${EXE}
+        DEPENDS AVRO-SCHEMA
+        COMMAND
+            cp ${CMAKE_CURRENT_SOURCE_DIR}/../src/avro.schema .
+        COMMENT
+            "Fetch corda avro schema"
+)

@@ -65,6 +65,8 @@ This is a C++ client library for the Corda P2P layer. As such, unsurprisingly, w
 
 # Build
 
+## MacOS
+
 For pkg-config to find openssl@1.1 you may need to set:
 ```
 export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"

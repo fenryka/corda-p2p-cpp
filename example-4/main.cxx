@@ -9,8 +9,10 @@
 #include <nlohmann/json.hpp>
 
 #include "config.h"
-#include "Message.h"
+#include "MessageFactory.h"
 #include "Identity.h"
+
+/**********************************************************************************************************************/
 
 std::list<std::string> Identities = { "alice", "chip" }; // NOLINT
 
@@ -78,6 +80,7 @@ main (int argc, char ** argv) {
     auto conf = corda::p2p::config::parse("default", jconf);
     corda::p2p::config::parse (*conf, "group", jconf);
 
+    std::cout << "Starting consumer thread" << std::endl;
     std::thread consumer (Consumer(), conf);
 
     // Create the Producer instance.
@@ -86,6 +89,8 @@ main (int argc, char ** argv) {
         std::stringstream ss;
         ss << "Failed to create new producer: " << errstr << std::endl;
         throw std::runtime_error (ss.str());
+    } else {
+        std::cout << "Producer created" << std::endl;
     }
 
 
@@ -95,32 +100,33 @@ main (int argc, char ** argv) {
         std::stringstream ss;
         ss << "Failed to create topic p2p.out, " << errstr;
         throw std::runtime_error (ss.str());
+    } else {
+        std::cout << "Created topic " << "p2p.out" << std::endl;
     }
 
     std::string key = jconf["name"];
     auto me = corda::p2p::identity::Identity(jconf["x500name"]);
     auto them = corda::p2p::identity::Identity(jconf["to"]);
 
+    auto factory = corda::p2p::messaging::MessageFactory("ignore me");
     for (std::string line; std::getline(std::cin, line);) {
+        std::cout << "Msg to send: \"" << line << "\"" << std::endl;
+        auto message = factory.message (key, line, me);
+        auto val = message->encode(them);
 
-        auto message = corda::p2p::messaging::Message (line, key, me);
+        auto bytes = avro::snapshot(*val);
 
-         auto val = message.encode(them);
-
-
-
-         /*
-                auto err = producer->produce(ktopic, RdKafka::Topic::PARTITION_UA,
+        auto err = producer->produce(ktopic, RdKafka::Topic::PARTITION_UA,
                                      RdKafka::Producer::RK_MSG_COPY,
-                                     val, val->byteCount(),
+                                     bytes->data(), bytes->size(),
                                      &key,
-                                     nullptr
-        );
+                                     nullptr);
 
         if (err != RdKafka::ERR_NO_ERROR) {
             throw std::runtime_error ("Failed to send");
+        } else {
+            std::cout << "Sent" << std::endl;
         }
-                                     */
     }
 
 }

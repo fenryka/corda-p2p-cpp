@@ -8,5 +8,6 @@
     }
   },
   "x500name": "O=Chip, L=London, C=GB",
-  "name": "chip"
+  "name": "chip",
+  "to" : "O=Alice, L=London, C=GB"
 }
