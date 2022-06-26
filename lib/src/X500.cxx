@@ -4,19 +4,19 @@
 #include <regex>
 
 #include <sstream>
-#include <exception>
-#include <iostream>
+
+/**********************************************************************************************************************/
 
 corda::p2p::identity::
-X500::X500() {
+X500::X500() = default;
 
-}
+/**********************************************************************************************************************/
 
 namespace {
 
     std::map<
             std::string,
-            std::function<void(corda::p2p::identity::X500 &, const std::string &)>> setters = // NOLNT
+            std::function<void(corda::p2p::identity::X500 &, const std::string &)>> setters =
     {
         {
                 "CN",
@@ -57,6 +57,8 @@ namespace {
     };
 }
 
+/**********************************************************************************************************************/
+
 corda::p2p::identity::
 X500::X500 (const std::string & str_) {
     /*
@@ -72,9 +74,11 @@ X500::X500 (const std::string & str_) {
         std::string s { *a++ };
 
         std::regex_search (s, mr, inner);
-        setters[mr[1]] (*this, mr[2]);
+        setters[std::string (mr[1]] (*this, mr[2]);
     }
 }
+
+/**********************************************************************************************************************/
 
 [[maybe_unused]] const std::string &
 corda::p2p::identity::
@@ -82,11 +86,15 @@ X500::commonName() const {
     return m_commonName;
 }
 
+/**********************************************************************************************************************/
+
 [[maybe_unused]] const std::string &
 corda::p2p::identity::
 X500::organizationUnit() const {
     return m_organizationUnit;
 }
+
+/**********************************************************************************************************************/
 
 [[maybe_unused]] const std::string &
 corda::p2p::identity::
@@ -94,11 +102,15 @@ X500::organizationName() const {
     return m_organizationName;
 }
 
+/**********************************************************************************************************************/
+
 [[maybe_unused]] const std::string &
 corda::p2p::identity::
 X500::localityName() const  {
     return m_localityName;
 }
+
+/**********************************************************************************************************************/
 
 [[maybe_unused]] const std::string &
 corda::p2p::identity::
@@ -106,11 +118,15 @@ X500::stateName() const {
     return m_stateName;
 }
 
+/**********************************************************************************************************************/
+
 [[maybe_unused]] const std::string &
 corda::p2p::identity::
 X500::country() const {
     return m_country;
 }
+
+/**********************************************************************************************************************/
 
 void
 corda::p2p::identity::
@@ -118,11 +134,15 @@ X500::commonName(const std::string & cn_) {
     m_commonName = cn_;
 }
 
+/**********************************************************************************************************************/
+
 void
 corda::p2p::identity::
 X500::organizationUnit(const std::string & ou_) {
     m_organizationUnit = ou_;
 }
+
+/**********************************************************************************************************************/
 
 void
 corda::p2p::identity::
@@ -130,11 +150,15 @@ X500::organizationName(const std::string & on_) {
     m_organizationName = on_;
 }
 
+/**********************************************************************************************************************/
+
 void
 corda::p2p::identity::
 X500::localityName(const std::string & l_) {
     m_localityName = l_;
 }
+
+/**********************************************************************************************************************/
 
 void
 corda::p2p::identity::
@@ -142,11 +166,15 @@ X500::stateName(const std::string & sn_) {
     m_stateName = sn_;
 }
 
+/**********************************************************************************************************************/
+
 void
 corda::p2p::identity::
 X500::country(const std::string & c_) {
     m_country = c_;
 }
+
+/**********************************************************************************************************************/
 
 std::string
 corda::p2p::identity::

@@ -19,12 +19,29 @@ MessageFactory::MessageFactory(std::string schemaName_)
 {
 }
 
-std::unique_ptr<corda::p2p::messaging::Message>
+std::unique_ptr<corda::p2p::messaging::BaseMessage>
 corda::p2p::messaging::
-MessageFactory::message(
+MessageFactory::messageMemEncode(
         std::string  key_,
         const std::string & payload_,
         const corda::p2p::identity::Identity & source_
 )  {
-    return std::make_unique<corda::p2p::messaging::Message> (Message { m_schema, std::move (key_), payload_, source_ });
+    return std::make_unique<corda::p2p::messaging::Message<MemEncoder>> (
+            Message<MemEncoder> { m_schema, std::move (key_), payload_, source_ });
+}
+
+std::unique_ptr<corda::p2p::messaging::BaseMessage>
+corda::p2p::messaging::
+MessageFactory::messageFileEncode(
+        const std::string & fileName_,
+        std::string         key_,
+        const std::string & payload_,
+        const corda::p2p::identity::Identity & source_
+)  {
+    auto rtn = std::make_unique<corda::p2p::messaging::Message<FileEncoder>> (
+            Message<FileEncoder> { m_schema, std::move (key_), payload_, source_ });
+
+    rtn->fileName (fileName_);
+
+    return rtn;
 }

@@ -1,0 +1,190 @@
+version: '3.4'
+
+x-common-variables:
+  &kafka-common-variables
+  KAFKA_MIN_INSYNC_REPLICAS: 2
+  KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+  KAFKA_NUM_PARTITIONS: 5
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CLIENT:PLAINTEXT,INTER_BROKER:PLAINTEXT
+  KAFKA_INTER_BROKER_LISTENER_NAME: INTER_BROKER
+
+
+services:
+  zoo1a:
+    image: zookeeper
+    restart: "no"
+    hostname: zoo1a
+    container_name: zoo1a
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=zoo2a:2888:3888;2181 server.3=zoo3a:2888:3888;2181
+
+  zoo2a:
+    image: zookeeper
+    restart: "no"
+    hostname: zoo2a
+    container_name: zoo2a
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo1a:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=zoo3a:2888:3888;2181
+
+  zoo3a:
+    image: zookeeper
+    restart: "no"
+    hostname: zoo3a
+    container_name: zoo3a
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo1a:2888:3888;2181 server.2=zoo2a:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
+
+  zoo1b:
+    image: zookeeper
+    restart: "no"
+    hostname: zoo1b
+    container_name: zoo1b
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=zoo2b:2888:3888;2181 server.3=zoo3b:2888:3888;2181
+
+  zoo2b:
+    image: zookeeper
+    restart: "no"
+    hostname: zoo2b
+    container_name: zoo2b
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo1b:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=zoo3b:2888:3888;2181
+
+  zoo3b:
+    image: zookeeper
+    restart: "no"
+    hostname: zoo3b
+    container_name: zoo3b
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo1b:2888:3888;2181 server.2=zoo2b:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
+
+  broker1a:
+    image: confluentinc/cp-kafka:6.1.1
+    restart: "no"
+    hostname: broker1a
+    container_name: broker1a
+    depends_on: [ zoo1a, zoo2a, zoo3a ]
+    ports:
+      - "19092:19092"
+    expose:
+      - '19093'
+    environment:
+      <<: *kafka-common-variables
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: CLIENT://localhost:19092,INTER_BROKER://broker1a:19093
+      KAFKA_ZOOKEEPER_CONNECT: zoo1a:2181,zoo2a:2181,zoo3a:2181
+      KAFKA_CLUSTER_ID: CLUSTER1
+
+  broker2a:
+    image: confluentinc/cp-kafka:6.1.1
+    restart: "no"
+    hostname: broker2a
+    container_name: broker2a
+    depends_on: [ zoo1a, zoo2a, zoo3a ]
+    ports:
+      - "19094:19094"
+    expose:
+      - '19095'
+    environment:
+      <<: *kafka-common-variables
+      KAFKA_BROKER_ID: 2
+      KAFKA_ADVERTISED_LISTENERS: CLIENT://localhost:19094,INTER_BROKER://broker2a:19095
+      KAFKA_ZOOKEEPER_CONNECT: zoo1a:2181,zoo2a:2181,zoo3a:2181
+      KAFKA_CLUSTER_ID: CLUSTER1
+
+  broker3a:
+    image: confluentinc/cp-kafka:6.1.1
+    restart: "no"
+    hostname: broker3a
+    container_name: broker3a
+    depends_on: [ zoo1a, zoo2a, zoo3a ]
+    ports:
+      - "19096:19096"
+    expose:
+      - '19097'
+    environment:
+      <<: *kafka-common-variables
+      KAFKA_BROKER_ID: 3
+      KAFKA_ADVERTISED_LISTENERS: CLIENT://localhost:19096,INTER_BROKER://broker3a:19097
+      KAFKA_ZOOKEEPER_CONNECT: zoo1b:2181,zoo2b:2181,zoo3b:2181
+      KAFKA_CLUSTER_ID: CLUSTER1
+
+
+  broker1b:
+    image: confluentinc/cp-kafka:6.1.1
+    restart: "no"
+    hostname: broker1b
+    container_name: broker1b
+    depends_on: [ zoo1b, zoo2b, zoo3b ]
+    ports:
+      - "29092:29092"
+    expose:
+      - '29093'
+    environment:
+      <<: *kafka-common-variables
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: CLIENT://localhost:29092,INTER_BROKER://broker1b:29093
+      KAFKA_ZOOKEEPER_CONNECT: zoo1b:2181,zoo2b:2181,zoo3b:2181
+      KAFKA_CLUSTER_ID: CLUSTER2
+
+  broker2b:
+    image: confluentinc/cp-kafka:6.1.1
+    restart: "no"
+    hostname: broker2b
+    container_name: broker2b
+    depends_on: [ zoo1b, zoo2b, zoo3b ]
+    ports:
+      - "29094:29094"
+    expose:
+      - '29095'
+    environment:
+      <<: *kafka-common-variables
+      KAFKA_BROKER_ID: 2
+      KAFKA_ADVERTISED_LISTENERS: CLIENT://localhost:29094,INTER_BROKER://broker2b:29095
+      KAFKA_ZOOKEEPER_CONNECT: zoo1b:2181,zoo2b:2181,zoo3b:2181
+      KAFKA_CLUSTER_ID: CLUSTER2
+
+  broker3b:
+    image: confluentinc/cp-kafka:6.1.1
+    restart: "no"
+    hostname: broker3b
+    container_name: broker3b
+    depends_on: [ zoo1b, zoo2b, zoo3b ]
+    ports:
+      - "29096:29096"
+    expose:
+      - '29097'
+    environment:
+      <<: *kafka-common-variables
+      KAFKA_BROKER_ID: 3
+      KAFKA_ADVERTISED_LISTENERS: CLIENT://localhost:29096,INTER_BROKER://broker3b:29097
+      KAFKA_ZOOKEEPER_CONNECT: zoo1b:2181,zoo2b:2181,zoo3b:2181
+      KAFKA_CLUSTER_ID: CLUSTER2
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    depends_on: [ broker1a, broker2a, broker3a, broker1b, broker2b, broker3b ]
+    hostname: gui
+    ports:
+      - "808:8080"
+    restart: "no"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=CLUSTER1
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker1a:19093
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zoo1a:2181
+      - KAFKA_CLUSTERS_0_READONLY=false
+      - KAFKA_CLUSTERS_1_NAME=CLUSTER2
+      - KAFKA_CLUSTERS_1_BOOTSTRAPSERVERS=broker1b:29093
+      - KAFKA_CLUSTERS_1_ZOOKEEPER=zoo1b:2181
+      - KAFKA_CLUSTERS_1_READONLY=false
+
+
+
+

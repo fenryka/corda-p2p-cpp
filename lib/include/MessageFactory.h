@@ -15,10 +15,16 @@ namespace corda::p2p::messaging {
     public :
         explicit MessageFactory (std::string);
 
-        std::unique_ptr<Message> message(
-            std::string  key_,
-            const std::string & payload_,
-            const corda::p2p::identity::Identity & source_);
+        std::unique_ptr<BaseMessage> messageMemEncode(
+            std::string,
+            const std::string &,
+            const identity::Identity &);
+
+        std::unique_ptr<BaseMessage> messageFileEncode(
+                const std::string &,
+                std::string,
+                const std::string &,
+                const corda::p2p::identity::Identity &);
     };
 
 }
