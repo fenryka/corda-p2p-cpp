@@ -9,8 +9,9 @@
 #include <nlohmann/json.hpp>
 
 #include "config.h"
-#include "MessageFactory.h"
 #include "Identity.h"
+#include "CordaAvro.h"
+#include "Message.h"
 
 /**********************************************************************************************************************/
 
@@ -32,16 +33,13 @@ public :
             return;
         }
 
-        auto err = consumer->subscribe({ "p2p.in" });
-
-        if (err != RdKafka::ERR_NO_ERROR) {
+        if (auto err = consumer->subscribe({ "p2p.in" }); err != RdKafka::ERR_NO_ERROR) {
             std::cerr << "Failed to subscribe" << std::endl;
             return;
         }
 
         for (;;) {
-            auto msg = consumer->consume(500);
-            if (msg->err() != RdKafka::ERR_NO_ERROR) {
+            if (auto msg = std::unique_ptr<RdKafka::Message>{  consumer->consume(500) }; msg->err() != RdKafka::ERR_NO_ERROR) {
                 if (msg->err() == RdKafka::ERR__PARTITION_EOF || msg->err() == RdKafka::ERR__TIMED_OUT) {
                     /* We can ignore this error - it just means we've read
                        everything and are waiting for more data */
@@ -54,10 +52,9 @@ public :
                 std::cout
                         << "Consumed event. Key = " << *msg->key()
                         << " value = " << (char *)msg->payload() << std::endl;
-            }
 
-            // Free the message when we're done.
-            delete (msg);
+
+            }
         }
     }
 };
@@ -94,7 +91,7 @@ main (int argc, char ** argv) {
     }
 
 
-    auto ktopic = RdKafka::Topic::create(producer, "p2p.out", nullptr, errstr);
+    auto ktopic = RdKafka::Topic::create (producer, "p2p.out", nullptr, errstr);
 
     if (!ktopic) {
         std::stringstream ss;
@@ -108,17 +105,29 @@ main (int argc, char ** argv) {
     auto me = corda::p2p::identity::Identity(jconf["x500name"]);
     auto them = corda::p2p::identity::Identity(jconf["to"]);
 
-    auto factory = corda::p2p::messaging::MessageFactory("ignore me");
     for (std::string line; std::getline(std::cin, line);) {
         std::cout << "Msg to send: \"" << line << "\"" << std::endl;
-        auto message = factory.message (key, line, me);
-        auto val = message->encode(them);
 
-        auto bytes = avro::snapshot(*val);
+        std::vector<unsigned char> v (line.begin(), line.end());
+        corda::p2p::messaging::AppMessage am (v, me, them);
+
+        auto appMessageFactory = am.factory();
+        auto encoder = appMessageFactory->encodeAsBinaryToMem();
+        auto res = encoder->encode (am);
+        res->flush();
+
+        auto bytes = avro::snapshot(*res);
+
+        corda::p2p::messaging::Envelope envelope (0, am.fingerprint(), bytes);
+        auto envelopeFactory = envelope.factory();
+        auto envEncoder = envelopeFactory->encodeAsBinaryToMem();
+        auto envOut = envEncoder->encode (envelope);
+        envOut->flush();
+        auto envBytes = avro::snapshot(*envOut);
 
         auto err = producer->produce(ktopic, RdKafka::Topic::PARTITION_UA,
                                      RdKafka::Producer::RK_MSG_COPY,
-                                     bytes->data(), bytes->size(),
+                                     envBytes->data(), envBytes->size(),
                                      &key,
                                      nullptr);
 

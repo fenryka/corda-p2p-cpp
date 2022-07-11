@@ -2,6 +2,8 @@
 
 #include <avro/Schema.hh>
 
+/**********************************************************************************************************************/
+
 avro::Schema
 corda::p2p::messaging::
 buildHoldingIdentitySchema() {
@@ -23,12 +25,15 @@ buildHoldingIdentitySchema() {
         }
      */
 
-    auto HoldingIdentity = avro::RecordSchema("HoldingIdentity");
+    //auto HoldingIdentity = avro::RecordSchema("HoldingIdentity");
+    auto HoldingIdentity = avro::RecordSchema("net.corda.data.identity.HoldingIdentity");
     HoldingIdentity.addField("x500name", avro::StringSchema());
     HoldingIdentity.addField("groupId", avro::StringSchema());
 
     return HoldingIdentity;
 }
+
+/**********************************************************************************************************************/
 
 avro::Schema
 corda::p2p::messaging::
@@ -53,13 +58,15 @@ buildUnauthenticatedMessageHeaderSchema() {
      */
 
     auto HoldingIdentity = buildHoldingIdentitySchema();
-    auto UnauthenticatedMessageHeader = avro::RecordSchema("UnauthenticatedMessageHeader");
+    auto UnauthenticatedMessageHeader = avro::RecordSchema("net.corda.p2p.app.UnauthenticatedMessageHeader");
     UnauthenticatedMessageHeader.addField("destination", HoldingIdentity);
     UnauthenticatedMessageHeader.addField("source", HoldingIdentity);
     UnauthenticatedMessageHeader.addField("subsystem", avro::StringSchema());
 
     return UnauthenticatedMessageHeader;
 }
+
+/**********************************************************************************************************************/
 
 avro::Schema
 corda::p2p::messaging::
@@ -81,7 +88,7 @@ buildAuthenticatedMessageHeaderSchema() {
      */
 
     auto HoldingIdentity = buildHoldingIdentitySchema();
-    auto AuthenticatedMessageHeader = avro::RecordSchema ("AuthenticatedMessageHeader");
+    auto AuthenticatedMessageHeader = avro::RecordSchema ("net.corda.p2p.app.AuthenticatedMessageHeader");
     AuthenticatedMessageHeader.addField ("destination", HoldingIdentity);
     AuthenticatedMessageHeader.addField ("source", HoldingIdentity);
     auto ttl = avro::UnionSchema();
@@ -94,6 +101,8 @@ buildAuthenticatedMessageHeaderSchema() {
 
     return AuthenticatedMessageHeader;
 }
+
+/**********************************************************************************************************************/
 
 avro::Schema
 corda::p2p::messaging::
@@ -109,12 +118,15 @@ buildUnauthenticatedMessageSchema() {
             ]
         }
      */
-    auto UnauthenticatedMessage = avro::RecordSchema("UnauthenticatedMessage");
+
+    auto UnauthenticatedMessage = avro::RecordSchema("net.corda.p2p.app.UnauthenticatedMessage");
     UnauthenticatedMessage.addField("header", buildUnauthenticatedMessageHeaderSchema());
     UnauthenticatedMessage.addField("payload", avro::BytesSchema());
 
     return UnauthenticatedMessage;
 }
+
+/**********************************************************************************************************************/
 
 avro::Schema
 corda::p2p::messaging::
@@ -131,12 +143,16 @@ buildAuthenticatedMessageSchema() {
         }
     */
 
-    auto AuthenticatedMessage = avro::RecordSchema ("AuthenticatedMessage");
+
+
+    auto AuthenticatedMessage = avro::RecordSchema ("net.corda.p2p.app.AuthenticatedMessage");
     AuthenticatedMessage.addField("header", buildAuthenticatedMessageHeaderSchema());
     AuthenticatedMessage.addField("payload", avro::BytesSchema());
 
     return AuthenticatedMessage;
 }
+
+/**********************************************************************************************************************/
 
 avro::Schema
 corda::p2p::messaging::
@@ -159,7 +175,7 @@ buildAppMessageSchema() {
         }
     */
 
-    auto AppMessage = avro::RecordSchema ("AppMessage");
+    auto AppMessage = avro::RecordSchema ("net.corda.p2p.app.AppMessage");
     auto message = avro::UnionSchema();
     message.addType(buildAuthenticatedMessageSchema());
     message.addType(buildUnauthenticatedMessageSchema());
@@ -167,3 +183,44 @@ buildAppMessageSchema() {
 
     return AppMessage;
 }
+
+/**********************************************************************************************************************/
+
+avro::Schema
+corda::p2p::messaging::
+buildEnvelopeSchema() {
+    /*
+        {
+            "type": "record",
+            "name": "AvroEnvelope",
+            "namespace": "net.corda.data",
+            "fields": [
+                {
+                    "name": "magic",
+                    "type": { "type": "fixed", "size": 8, "name": "Magic" }
+                },
+                {
+                    "name": "fingerprint",
+                    "type": { "type": "fixed", "size": 32, "name": "Fingerprint" }
+                },
+                {
+                    "name": "flags",
+                    "type": "int"
+                },
+                {
+                    "name": "payload",
+                    "type": "bytes"
+                }
+            ]
+        }
+    */
+    auto envelope = avro::RecordSchema ("net.corda.data.AvroEnvelope");
+    envelope.addField("magic", ::avro::FixedSchema(8, "Magic"));
+    envelope.addField("fingerprint", ::avro::FixedSchema (32, "Fingerprint"));
+    envelope.addField("flags", ::avro::IntSchema());
+    envelope.addField("payload", ::avro::BytesSchema());
+
+    return envelope;
+}
+
+/**********************************************************************************************************************/

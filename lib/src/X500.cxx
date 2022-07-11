@@ -7,16 +7,11 @@
 
 /**********************************************************************************************************************/
 
-corda::p2p::identity::
-X500::X500() = default;
-
-/**********************************************************************************************************************/
-
 namespace {
 
     std::map<
             std::string,
-            std::function<void(corda::p2p::identity::X500 &, const std::string &)>> setters =
+            std::function<void(corda::p2p::identity::X500 &, const std::string &)>> setters = // NOLINT
     {
         {
                 "CN",
@@ -74,13 +69,13 @@ X500::X500 (const std::string & str_) {
         std::string s { *a++ };
 
         std::regex_search (s, mr, inner);
-        setters[std::string (mr[1]] (*this, mr[2]);
+        setters[std::string (mr[1])] (*this, mr[2]);
     }
 }
 
 /**********************************************************************************************************************/
 
-[[maybe_unused]] const std::string &
+const std::string &
 corda::p2p::identity::
 X500::commonName() const {
     return m_commonName;
@@ -96,7 +91,7 @@ X500::organizationUnit() const {
 
 /**********************************************************************************************************************/
 
-[[maybe_unused]] const std::string &
+const std::string &
 corda::p2p::identity::
 X500::organizationName() const {
     return m_organizationName;
@@ -104,7 +99,7 @@ X500::organizationName() const {
 
 /**********************************************************************************************************************/
 
-[[maybe_unused]] const std::string &
+const std::string &
 corda::p2p::identity::
 X500::localityName() const  {
     return m_localityName;
@@ -112,7 +107,7 @@ X500::localityName() const  {
 
 /**********************************************************************************************************************/
 
-[[maybe_unused]] const std::string &
+const std::string &
 corda::p2p::identity::
 X500::stateName() const {
     return m_stateName;

@@ -25,12 +25,12 @@ namespace corda::p2p::identity {
         std::string m_country;
 
     public :
-        X500();
+        X500() = default;
         explicit X500 (const std::string &);
 
         [[maybe_unused]] [[nodiscard]] const std::string & commonName() const;
 
-        [[maybe_unused]] [[nodiscard]] const std::string & organizationUnit() const;
+        [[maybe_unused]] [[maybe_unused]] [[nodiscard]] const std::string & organizationUnit() const;
 
         [[maybe_unused]] [[nodiscard]] const std::string & organizationName() const;
 
@@ -40,14 +40,14 @@ namespace corda::p2p::identity {
 
         [[maybe_unused]] [[nodiscard]] const std::string & country() const;
 
-        [[nodiscard]] std::string name() const;
+        [[maybe_unused]] [[nodiscard]] std::string name() const;
 
-        void commonName(const std::string &);
-        void organizationUnit(const std::string &);
-        void organizationName(const std::string &);
-        void localityName(const std::string &);
-        void stateName(const std::string &);
-        void country(const std::string &);
+        [[maybe_unused]] void commonName(const std::string &);
+        [[maybe_unused]] void organizationUnit(const std::string &);
+        [[maybe_unused]] void organizationName(const std::string &);
+        [[maybe_unused]] void localityName(const std::string &);
+        [[maybe_unused]] void stateName(const std::string &);
+        [[maybe_unused]] void country(const std::string &);
     };
 
 }

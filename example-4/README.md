@@ -1,13 +1,8 @@
-# Kafka Example Two
+# Kafka Example four
 
 # What is it?
 
-This is a very basic Kafka producer / consumer example based on Confluents own. Their 
-documentation for lib rdkafka focusses on the C api and not C++, so thus
-is a basic port of that example to rdkafka++. This is why there is a fair amount
-of Cisms left in, especially around parsing the config and printing to the screen.
-I couldn't be bothered to alter that code, wanting to focus only on switching over
-to the C++ Kafka API.
+This is t he first test that should enable bridging between two Corda gateways.
 
 # Building
 

@@ -35,14 +35,14 @@ mkdir -p p2p-deployment/logs/alice
 mkdir -p p2p-deployment/logs/chip
 java -jar \
   -Dbootstrap.servers=localhost:19092 \
-  $1/applications/tools/kafka-setup/build/bin/corda-kafka-setup-5.0.0$2.jar \
+  $1/applications/tools/kafka-setup/build/bin/corda-kafka-setup-$2.jar \
   --topic \
   $1/applications/tools/p2p-test/p2p-setup/src/main/resources/p2p-kafka-setup-example.conf > p2p-deployment/logs/alice/kafka-setup.log
 
 echo 'Setting topics - kafka 2'
 java -jar \
   -Dbootstrap.servers=localhost:29092 \
-  $1/applications/tools/kafka-setup/build/bin/corda-kafka-setup-5.0.0$2.jar \
+  $1/applications/tools/kafka-setup/build/bin/corda-kafka-setup-$2.jar \
   --topic \
   $1/applications/tools/p2p-test/p2p-setup/src/main/resources/p2p-kafka-setup-example.conf  > p2p-deployment/logs/chip/kafka-setup.log
 
@@ -55,7 +55,7 @@ openssl ec -in p2p-deployment/keystores/chip_session_key_private.pem -pubout -ou
 
 echo 'Creating TLS keys'
 java -jar \
-  $1/applications/tools/p2p-test/fake-ca/build/bin/corda-fake-ca-5.0.0$2.jar \
+  $1/applications/tools/p2p-test/fake-ca/build/bin/corda-fake-ca-$2.jar \
   -m p2p-deployment/keystores/ca \
   ca \
   create-certificate www.alice.net alice.net \
@@ -166,7 +166,7 @@ EOF
 
 echo 'Setting up alice on kafka 1'
 java -jar \
-  $1/applications/tools/p2p-test/p2p-setup/build/bin/corda-p2p-setup-5.0.0$2.jar \
+  $1/applications/tools/p2p-test/p2p-setup/build/bin/corda-p2p-setup-$2.jar \
   -k localhost:19092 \
   apply p2p-deployment/alice.setup.json \
   config-link-manager \
@@ -174,24 +174,11 @@ java -jar \
 
 echo 'Setting up chip on kafka 2'
 java -jar \
-  $1/applications/tools/p2p-test/p2p-setup/build/bin/corda-p2p-setup-5.0.0$2.jar \
+  $1/applications/tools/p2p-test/p2p-setup/build/bin/corda-p2p-setup-$2.jar \
   -k localhost:29092 \
   apply p2p-deployment/chip.setup.json \
   config-link-manager \
   config-gateway --port=8086 > p2p-deployment/logs/chip/p2p-setup.log
-
-
-echo 'Starting link managers'
-java -jar \
-    $1/applications/p2p-link-manager/build/bin/corda-p2p-link-manager-5.0.0$2.jar \
-    -k=localhost:19092\
-    -i=1 > p2p-deployment/logs/alice/lm.log &
-
-java -jar \
-    $1/applications/p2p-link-manager/build/bin/corda-p2p-link-manager-5.0.0$2.jar \
-    -k=localhost:29092\
-    -i=1 > p2p-deployment/logs/chip/lm.log &
-
 
 echo 'Starting Gateways'
 cat << EOF > p2p-deployment/hosts
@@ -207,16 +194,4 @@ cat << EOF > p2p-deployment/hosts
 255.255.255.255	broadcasthost
 ::1             localhost
 EOF
-
-java -jar \
-  -Djdk.net.hosts.file=p2p-deployment/hosts \
-  $1/applications/p2p-gateway/build/bin/corda-p2p-gateway-5.0.0$2.jar \
-  -k=localhost:19092 \
-  -i=1 > p2p-deployment/logs/alice/gw.log &
-
-java -jar \
-  -Djdk.net.hosts.file=p2p-deployment/hosts \
-  $1/applications/p2p-gateway/build/bin/corda-p2p-gateway-5.0.0$2.jar \
-  -k=localhost:29092 \
-  -i=1 > p2p-deployment/logs/chip/gw.log &
 

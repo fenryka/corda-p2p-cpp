@@ -4,11 +4,10 @@ set (libname corda-p2p)
 
 set (source-files
         config.cxx
-        avro.cxx
         identity.cxx
         X500.cxx
         Message.cxx
-        MessageFactory.cxx
+        CordaAvro.cxx
         SchemaBuilder.cxx)
 
 #
@@ -19,6 +18,7 @@ set (p2p-avro https://raw.githubusercontent.com/corda/corda-api/release/os/5.0/d
 set (p2p-app-avro ${p2p-avro}/p2p/app)
 set (p2p-identity-avro ${p2p-avro}/identity)
 
+
 # function to pull down each dependency from the Corda API repo, basically just saves the
 # the replication of a lot of boiler plate
 function(fetchAvro arg1 arg2 arg3)
@@ -26,7 +26,7 @@ function(fetchAvro arg1 arg2 arg3)
             DOWNLOAD_COMMAND URL "${arg3}/${arg2}"
             DOWNLOAD_NO_EXTRACT ON
             DOWNLOAD_NAME ${arg2}
-            )
+    )
 
     FetchContent_MakeAvailable (${arg1})
 
@@ -45,6 +45,9 @@ fetchAvro (auth-message-header-avro "AuthenticatedMessageHeader.avsc" ${p2p-app-
 fetchAvro (unauth-message-avro "UnauthenticatedMessage.avsc" ${p2p-app-avro})
 fetchAvro (unauth-message-header-avro "UnauthenticatedMessageHeader.avsc" ${p2p-app-avro})
 fetchAvro (holding-identity-avro "HoldingIdentity.avsc" ${p2p-identity-avro})
+fetchAvro (envelope-avro "AvroEnvelope.avsc" ${p2p-avro})
+
+message("ENV - ${envelope-avro_file}")
 
 set (avro-files
         ${holding-identity-avro_file}
@@ -67,25 +70,34 @@ add_custom_command (
             "Merging Corda AVRO schemas for cpp-gen"
         )
 
-add_custom_command (
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/avro.schema
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/schema-gen.py
-        COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/schema-gen.py ${CMAKE_CURRENT_SOURCE_DIR}/avro.schema ${holding-identity-avro_file} ${unauth-message-header-avro_file} ${auth-message-header-avro_file} ${unauth-message-avro_file} ${auth-message-avro_file} ${app-message-avro_file}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT
-            "Merging Corda AVRO schemas for json schema"
-)
-
 add_custom_command(
         OUTPUT avro.h
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/avro.asvc
-        COMMAND avrogencpp -n corda_p2p -i ${CMAKE_CURRENT_SOURCE_DIR}/avro.asvc -o avro.h
+        COMMAND avrogencpp -n "net::corda::p2p::app" -i ${CMAKE_CURRENT_SOURCE_DIR}/avro.asvc -o avro.h
         COMMENT
             "Building avro header"
 )
 
-add_custom_target (ASCV ALL
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/avro.asvc
+add_custom_target (
+        ASCV ALL
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/avro.h
+)
+
+add_custom_command (
+        OUTPUT envelope.h
+        DEPENDS ${envelope-avro_file}
+        COMMAND avrogencpp -n "net::corda::data" -i ${envelope-avro_file} -o envelope.h
+        COMMENT
+            "Building outer AVRO Envelope"
+)
+
+#
+# Make sure we actually invoke the above, which it wont be unless we create a fake target
+# that's always built
+#
+add_custom_target(
+        ACSV ALL
+        DEPENDS envelope.h
 )
 
 add_custom_target (AVRO-SCHEMA ALL
@@ -93,7 +105,11 @@ add_custom_target (AVRO-SCHEMA ALL
         COMMENT "Satisfy AVRO Jason Schema gen dependency"
 )
 
-ADD_LIBRARY (${libname} SHARED ${source-files} avro.h)
+#
+# Until we can generate the avro header properly, use the manually
+# generated one
+#
+ADD_LIBRARY (${libname} SHARED ${source-files} avro-manual.h)
 
 target_include_directories(${libname} PUBLIC ${KAFKA_INCLUDE_DIRS})
 target_link_libraries (${libname} ${KAFKA_LIBRARIES} avrocpp)
