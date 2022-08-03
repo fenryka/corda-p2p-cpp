@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include <fstream>
-#include "../src/avro.h"
-#include "X500Support.h"
 
-#include "avro/Encoder.hh"
-#include "avro/Decoder.hh"
-#include "avro/Compiler.hh"
-#include "../src/SchemaBuilder.h"
+#include <avro/Encoder.hh>
+#include <avro/Decoder.hh>
+#include <avro/Compiler.hh>
 #include <avro/Schema.hh>
 
+#include "../src/avro-manual.h"
+#include "../src/SchemaBuilder.h"
+
+#include "X500Support.h"
 
 class AvroTests: public ::testing::Test {
 public:
@@ -44,7 +45,7 @@ TEST_F (AvroTests, alice) { // NOLINT
 
 TEST_F (AvroTests, test1) { // NOLINT
     corda::p2p::identity::test::Alice alice;
-    corda_p2p::HoldingIdentity hi;
+    net::corda::data::identity::HoldingIdentity hi;
 
     std::unique_ptr <avro::OutputStream> out = avro::memoryOutputStream();
 
@@ -58,7 +59,7 @@ TEST_F (AvroTests, test1) { // NOLINT
     avro::DecoderPtr d = avro::binaryDecoder();
     d->init(*in);
 
-    corda_p2p::HoldingIdentity hi2 ;
+    net::corda::data::identity::HoldingIdentity hi2 ;
     avro::decode(*d, hi2);
 
     std::cout << hi2.x500Name << std::endl;
@@ -67,11 +68,11 @@ TEST_F (AvroTests, test1) { // NOLINT
 /**********************************************************************************************************************/
 
 TEST_F (AvroTests, unauthMsg) { // NOLINT
-    corda_p2p::AppMessage am;
-    corda_p2p::UnauthenticatedMessage um;
-    corda_p2p::UnauthenticatedMessageHeader umh;
-    corda_p2p::HoldingIdentity from;
-    corda_p2p::HoldingIdentity to;
+    net::corda::p2p::app::AppMessage am;
+    net::corda::p2p::app::UnauthenticatedMessage um;
+    net::corda::p2p::app::UnauthenticatedMessageHeader umh;
+    net::corda::data::identity::HoldingIdentity from;
+    net::corda::data::identity::HoldingIdentity to;
 
     corda::p2p::identity::test::Alice alice;
     corda::p2p::identity::test::Bob bob;
@@ -122,7 +123,7 @@ TEST_F (AvroTests, holdingIdLS) { // NOLINT
     avro::EncoderPtr e = avro::jsonEncoder (schema);
     e->init (*out2);
 
-    corda_p2p::HoldingIdentity hi = corda_p2p::HoldingIdentity();
+    net::corda::data::identity::HoldingIdentity hi = net::corda::data::identity::HoldingIdentity();
     hi.x500Name = "Some INVALID X500";
     hi.groupId = "GROUP 1";
 
@@ -172,7 +173,7 @@ TEST_F (AvroTests, holdingIdLS2) { // NOLINT
     avro::EncoderPtr e = avro::jsonEncoder (schema);
     e->init (*out2);
 
-    corda_p2p::HoldingIdentity hi = corda_p2p::HoldingIdentity();
+    net::corda::data::identity::HoldingIdentity hi = net::corda::data::identity::HoldingIdentity();
     hi.x500Name = "Some INVALID X500";
     hi.groupId = "GROUP 1";
 
@@ -185,7 +186,7 @@ TEST_F (AvroTests, holdingIdLS2) { // NOLINT
 /**********************************************************************************************************************/
 
 TEST_F (AvroTests, holdingId) { // NOLINT
-    corda_p2p::HoldingIdentity hi = corda_p2p::HoldingIdentity();
+    net::corda::data::identity::HoldingIdentity hi = net::corda::data::identity::HoldingIdentity();
 
     std::unique_ptr <avro::OutputStream> out1 = avro::memoryOutputStream();
 
@@ -248,7 +249,7 @@ TEST_F (AvroTests, unauthMsgHdr) { // NOLINT
         ]
     }))"};
 
-    auto uhm = corda_p2p::UnauthenticatedMessageHeader();
+    auto uhm = net::corda::p2p::app::UnauthenticatedMessageHeader();
     uhm.subsystem = "subby";
     uhm.source.x500Name = "source500";
     uhm.source.groupId = "group 1";
@@ -275,7 +276,7 @@ TEST_F (AvroTests, unauthMsgHdr) { // NOLINT
 
 TEST_F (AvroTests, unauthMsgHdrFromSchemaFile) { // NOLINT
 
-    auto uhm = corda_p2p::UnauthenticatedMessageHeader();
+    auto uhm = net::corda::p2p::app::UnauthenticatedMessageHeader();
     uhm.subsystem = "subby";
     uhm.source.x500Name = "source500";
     uhm.source.groupId = "group 1";
@@ -304,7 +305,7 @@ TEST_F (AvroTests, unauthMsgHdrFromSchemaFile) { // NOLINT
 /**********************************************************************************************************************/
 
 TEST_F (AvroTests, BuiltSchema1) {
-    auto uhm = corda_p2p::UnauthenticatedMessageHeader();
+    auto uhm = net::corda::p2p::app::UnauthenticatedMessageHeader();
     uhm.subsystem = "subby";
     uhm.source.x500Name = "source500";
     uhm.source.groupId = "group 1";
@@ -313,7 +314,7 @@ TEST_F (AvroTests, BuiltSchema1) {
 
     std::unique_ptr <avro::OutputStream> out = avro::memoryOutputStream();
 
-    avro::EncoderPtr e = avro::jsonEncoder (avro::ValidSchema (buildUnauthenticatedMessageSchema()));
+    avro::EncoderPtr e = avro::jsonEncoder (avro::ValidSchema (corda::p2p::messaging::buildUnauthenticatedMessageSchema()));
     e->init (*out);
 
     try {

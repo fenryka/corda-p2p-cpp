@@ -42,7 +42,7 @@ namespace net::corda::p2p::app {
 
 struct UnauthenticatedMessageHeader {
     data::identity::HoldingIdentity destination;
-    data::identity::HoldingIdentity source;
+    data::identity::HoldingIdentity /**/source;
     std::string subsystem;
     UnauthenticatedMessageHeader() :
         destination(data::identity::HoldingIdentity()),

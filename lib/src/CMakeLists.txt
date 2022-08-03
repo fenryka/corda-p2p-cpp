@@ -6,9 +6,9 @@ set (source-files
         config.cxx
         identity.cxx
         X500.cxx
-        Message.cxx
-        CordaAvro.cxx
-        SchemaBuilder.cxx)
+        CordaAvroSerializable.cxx
+        SchemaBuilder.cxx
+        Deflator.cxx)
 
 #
 # Where Corda keeps the P2P avro specs. This URL should always be the latest version of the API, we can worry about
@@ -100,11 +100,6 @@ add_custom_target(
         DEPENDS envelope.h
 )
 
-add_custom_target (AVRO-SCHEMA ALL
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/avro.schema
-        COMMENT "Satisfy AVRO Jason Schema gen dependency"
-)
-
 #
 # Until we can generate the avro header properly, use the manually
 # generated one
@@ -116,10 +111,9 @@ target_link_libraries (${libname} ${KAFKA_LIBRARIES} avrocpp)
 
 SET_TARGET_PROPERTIES (${libname} PROPERTIES VERSION ${PROJECT_VERSION})
 SET_TARGET_PROPERTIES (${libname} PROPERTIES SOVERSION 1)
-SET_TARGET_PROPERTIES (${libname} PROPERTIES PUBLIC_HEADER include/config.h)
+SET_TARGET_PROPERTIES (${libname} PROPERTIES PUBLIC_HEADER "include/config.h; include/CordaAvroEncoder.h; include/CordaAvroDecoder.h")
 
-message(STATUS "KAFKA_LIBRARIES = ${KAFKA_LIBRARIES}")
 target_include_directories(${libname} PUBLIC ${KAFKA_INCLUDE_DIRS})
 
-target_link_libraries (${libname} ${KAFKA_LIBRARIES})
+target_link_libraries (${libname} ${KAFKA_LIBRARIES} z)
 

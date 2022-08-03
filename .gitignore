@@ -14,3 +14,5 @@ cmake-ide
 cmake_install.cmake
 Testing
 _deps
+build
+build-ide

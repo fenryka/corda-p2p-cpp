@@ -11,7 +11,11 @@
 brew install PkgConfig
 brew install glib
 brew install librdkafka
-brew install nlohmann-json 
+brew install nlohmann-json
+
+# Need to decompress recieved messages as the inner AppMessage is compressed
+# inside the Envelope 
+brew install zlib
 ```
 
 ### Ububtu Linux

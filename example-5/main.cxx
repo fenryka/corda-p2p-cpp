@@ -3,8 +3,8 @@
 
 #include <nlohmann/json.hpp>
 
-#include "Message.h"
-#include "CordaAvro.h"
+#include "CordaAvroSerializable.h"
+#include "CordaAvroEncoder.h"
 #include "Identity.h"
 
 /**********************************************************************************************************************/
@@ -20,8 +20,10 @@ main (int argc, [[maybe_unused]] char ** argv) {
         throw std::invalid_argument("no arguments please");
     }
 
-    auto me = corda::p2p::identity::Identity(from);
-    auto them = corda::p2p::identity::Identity(to);
+    auto me = std::make_shared<corda::p2p::identity::Identity>(corda::p2p::identity::Identity(from));
+    auto them = std::make_shared<corda::p2p::identity::Identity>(corda::p2p::identity::Identity(to));
+
+    auto factory = corda::p2p::avro::CordaAvroFactory<corda::p2p::messaging::AppMessage>();
 
     int file { 0 };
     std::cout << "Enter text: ";
@@ -31,14 +33,12 @@ main (int argc, [[maybe_unused]] char ** argv) {
         ss << "out-" << file++ << ".json";
         std::vector<unsigned char> v (line.begin(), line.end());
         corda::p2p::messaging::AppMessage am (v, me, them);
-        auto factory = am.factory();
 #if 0
         auto encoder = factory->encodeAsBinaryToFile(ss.str());
 #else
-        auto encoder = factory->encodeAsJSONToFile(ss.str());
+        auto encoder = factory.encodeAsJSONToFile(ss.str());
 #endif
         auto res = encoder->encode (am);
-        res->flush();
     }
 }
 

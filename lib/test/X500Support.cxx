@@ -1,7 +1,7 @@
 #include "X500Support.h"
 
 corda::p2p::identity::test::
-Alice::Alice()
+AliceX500::AliceX500()
     : X500()
 {
     organizationName ("Alice");
@@ -10,7 +10,7 @@ Alice::Alice()
 }
 
 corda::p2p::identity::test::
-Bob::Bob()
+BobX500::BobX500()
     : X500()
 {
     organizationName ("Bob");

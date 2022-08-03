@@ -1,5 +1,7 @@
 set (EXE "corda-p2p-test")
 
+include_directories("../src")
+
 link_directories (${CORDA-P2P-CPP_BINARY_DIR}/lib/src)
 
 set (sources
@@ -8,8 +10,8 @@ set (sources
         avro.cxx
         X500.cxx
         X500Support.cxx
-        MessageTests.cxx
-        ../src/SchemaBuilder.cxx
+        RoundTripTests.cxx
+        DeflateTests.cxx
         )
 
 set (libs
@@ -39,13 +41,4 @@ add_custom_command(
             cp ${CMAKE_CURRENT_SOURCE_DIR}/../src/avro.asvc .
         COMMENT
             "Fetch corda avro spec"
-)
-
-add_custom_command(
-        TARGET ${EXE}
-        DEPENDS AVRO-SCHEMA
-        COMMAND
-            cp ${CMAKE_CURRENT_SOURCE_DIR}/../src/avro.schema .
-        COMMENT
-            "Fetch corda avro schema"
 )
