@@ -31,6 +31,19 @@ sudo apt-get install -y nlohmann-json-dev
 sudo apt-get install -y libsd-dev
 ```
 
+## Apache AVRO
+
+The C++ Apache AVRO implementation requries BOOST
+
+```
+brew install boost 
+```
+
+```
+git clone https://github.com/apache/avro
+```
+
+
 ## Corda
 
 This is a C++ client library for the Corda P2P layer. As such, unsurprisingly, we need Corda.
@@ -73,7 +86,11 @@ This is a C++ client library for the Corda P2P layer. As such, unsurprisingly, w
 
 For pkg-config to find openssl@1.1 you may need to set:
 ```
+# This used to work
 export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
+
+# On my newer M1 Mac Brew seems to stick things here now
+export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@1.1/lib/pkgconfig"
 ```
 
 # CLion

@@ -19,9 +19,15 @@ set (CMAKE_VERBOSE_MAKEFILE "FALSE" CACHE BOOL "" FORCE)
 # qpid-python files as brew installs it there
 #
 if(APPLE)
-    include_directories (/usr/local/include)
-    link_directories (/usr/local/lib)
+    include_directories (
+        /usr/local/include
+        /opt/homebrew/include)
+
+    link_directories (
+        /usr/local/lib
+        /opt/homebrew/lib)
 endif()
+
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,4 +42,5 @@ ADD_SUBDIRECTORY(example-2)
 ADD_SUBDIRECTORY(example-3)
 ADD_SUBDIRECTORY(example-4)
 ADD_SUBDIRECTORY(example-5)
+
 ADD_SUBDIRECTORY(lib)
