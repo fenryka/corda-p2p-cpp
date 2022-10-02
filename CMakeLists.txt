@@ -18,6 +18,10 @@ set (CMAKE_VERBOSE_MAKEFILE "FALSE" CACHE BOOL "" FORCE)
 # system include path so add it back in or we will fail to find
 # qpid-python files as brew installs it there
 #
+# Secondly, looks like Homebrew now sticks things in /opt/homebrew
+# instread of /user/local so that also needs adding to the relevent
+# dir locations
+#
 if(APPLE)
     include_directories (
         /usr/local/include

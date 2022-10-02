@@ -3,6 +3,7 @@
 #include <fstream>
 #include <list>
 #include <thread>
+#include <sstream>
 
 #include <librdkafka/rdkafkacpp.h>
 #include <nlohmann/json.hpp>

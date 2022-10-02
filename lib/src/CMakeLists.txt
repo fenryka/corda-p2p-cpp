@@ -106,7 +106,14 @@ add_custom_target(
 #
 ADD_LIBRARY (${libname} SHARED ${source-files} avro-manual.h)
 
-target_include_directories(${libname} PUBLIC ${KAFKA_INCLUDE_DIRS})
+target_include_directories(${libname} PUBLIC ${KAFKA_INCLUDE_DIRS} ~/bin/avrocpp-1/include)
+
+#
+# This could be a MacOS thing, but it seems much harder to actuall install avro in a sensible
+# location now
+#
+target_link_directories(${libname} PUBLIC ~/bin/avrocpp-1/lib)
+
 target_link_libraries (${libname} ${KAFKA_LIBRARIES} avrocpp)
 
 SET_TARGET_PROPERTIES (${libname} PROPERTIES VERSION ${PROJECT_VERSION})

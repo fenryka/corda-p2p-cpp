@@ -37,11 +37,21 @@ The C++ Apache AVRO implementation requries BOOST
 
 ```
 brew install boost 
+brew install snappy
 ```
 
 ```
 git clone https://github.com/apache/avro
 ```
+
+```
+cd avro/lang/c++
+cmake .
+make package
+```
+
+Then copy the tarball to a convienient location, extract it, and add the bin dir to your path, this includes the avro
+generator
 
 
 ## Corda

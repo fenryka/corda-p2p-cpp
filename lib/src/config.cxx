@@ -3,8 +3,10 @@
 #include <nlohmann/json.hpp>
 #include <librdkafka/rdkafkacpp.h>
 #include <iostream>
+#include <sstream>
 
 #include "debug.h"
+
 /**********************************************************************************************************************/
 
 void
