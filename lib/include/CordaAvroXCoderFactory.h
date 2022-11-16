@@ -36,7 +36,6 @@ namespace corda::p2p::avro {
                     internal::FileEncoder<T, internal::Binary> { fileName_, m_schema } );
         }
 
-
         std::unique_ptr<corda::p2p::avro::CordaAvroEncoder<T>>
         encodeAsBinaryToMem() {
             return std::make_unique<internal::MemEncoder<T, internal::Binary>> (

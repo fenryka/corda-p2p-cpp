@@ -4,7 +4,7 @@
 #include <nlohmann/json.hpp>
 
 #include "CordaAvroSerializable.h"
-#include "CordaAvroEncoder.h"
+#include "CordaAvroXCoderFactory.h"
 #include "Identity.h"
 
 /**********************************************************************************************************************/

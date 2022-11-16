@@ -18,6 +18,27 @@ brew install nlohmann-json
 brew install zlib
 ```
 
+#### Google Test
+
+```
+git clone https://github.com/google/googletest
+cd googletest
+mkdir build
+cd build
+cmake ..
+make
+make install
+```
+
+> *NOTE:* for what I can only assume are bullshit reasons MacOS no longer
+> has a default /user/local/include directory. Something about wanting
+> Libraries installed in their own apple specific way. Which is of course
+> a PitA for anyone wanting to install a generic linux style lib... like
+> GTest.
+> 
+> I recommend just  creating it but that's almost certianly not the 
+> recomended aproach. 
+
 ### Ububtu Linux
 
 ```
@@ -30,6 +51,17 @@ sudo apt-get install -y nlohmann-json-dev
 # linux doens't have arc4random as part of its standard lib
 sudo apt-get install -y libsd-dev
 ```
+
+#### Google Test
+
+* sudo apt-get install cmake
+* sudo apt-get install libqpid-proton8-dev
+* sudo apt-get install libgtest-dev
+
+And now because that installer only pulls down the sources
+* cd /usr/src/googletest
+* sudo cmake .
+* sudo cmake --build . --target install
 
 ## Apache AVRO
 

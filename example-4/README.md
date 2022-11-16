@@ -2,7 +2,7 @@
 
 # What is it?
 
-This is t he first test that should enable bridging between two Corda gateways.
+This is the first test that should enable bridging between two Corda gateways.
 
 # Building
 
