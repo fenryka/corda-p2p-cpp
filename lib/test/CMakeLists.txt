@@ -21,7 +21,7 @@ set (libs
         )
 
 # gtest requires linking against the posix threading libs on linux... but not on
-# apple
+# apple.
 IF (UNIX AND NOT APPLE)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     find_package(Threads REQUIRED)
