@@ -45,7 +45,7 @@ namespace corda::p2p::identity::test {
     class Bob : public corda::p2p::identity::Identity {
     public :
         Bob()
-                : corda::p2p::identity::Identity (BobX500::ptr())
+            : corda::p2p::identity::Identity (BobX500::ptr())
         {
 
         }

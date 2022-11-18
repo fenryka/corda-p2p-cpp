@@ -2,7 +2,11 @@
 #include <nlohmann/json.hpp>
 #include "config.h"
 
+/**********************************************************************************************************************/
+
 using json = nlohmann::json;
+
+/**********************************************************************************************************************/
 
 TEST (json, defaultSection) { // NOLINT
     auto config = R"({
@@ -21,6 +25,8 @@ TEST (json, defaultSection) { // NOLINT
     ASSERT_NO_THROW(corda::p2p::config::parse ("default", jconf));
 }
 
+/**********************************************************************************************************************/
+
 TEST (json, emptyJson) { // NOLINT
     auto config = R"({})";
 
@@ -28,6 +34,8 @@ TEST (json, emptyJson) { // NOLINT
 
     ASSERT_ANY_THROW(corda::p2p::config::parse ("default", jconf));
 }
+
+/**********************************************************************************************************************/
 
 TEST (json, defaultSectionAndConsumer) { // NOLINT
     auto config = R"({
@@ -45,3 +53,5 @@ TEST (json, defaultSectionAndConsumer) { // NOLINT
 
     ASSERT_NO_THROW(corda::p2p::config::parse ("default", jconf));
 }
+
+/**********************************************************************************************************************/

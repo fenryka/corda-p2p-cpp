@@ -2,6 +2,8 @@
 
 #include "Deflator.h"
 
+/**********************************************************************************************************************/
+
 std::string lorum = { // NOLINT
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ex odio, finibus sed lectus et, " \
         "pharetra eleifend sem. Donec quam ipsum, volutpat eu porttitor quis, tempor consectetur nisl. Cras bibendum " \
@@ -13,7 +15,11 @@ std::string lorum = { // NOLINT
         "convallis nisi. Vestibulum sem ligula, ultricies eu iaculis interdum, tempor at turpis."
 };
 
+/**********************************************************************************************************************/
+
 std::vector<uint8_t> lorumBytes = { lorum.begin(), lorum.end() }; // NOLINT
+
+/**********************************************************************************************************************/
 
 /*
  * Just make sure we can, using raw AVRO, actually round-trip an AppMessage
@@ -28,20 +34,16 @@ TEST (xflate, deflate) { // NOLINT
     std::cout << R"(")" << gibberish << R"(")" << std::endl;
 }
 
+/**********************************************************************************************************************/
+
 TEST (xflate, inflate) { // NOLINT
     auto compressed = deflate (lorumBytes, 2);
     auto decompressed = inflate(compressed);
 
-    std::cout << lorumBytes[0] << " " << lorumBytes[1] << std::endl;
-    std::cout << compressed[0] << " " << compressed[1] << std::endl;
-    std::cout << decompressed[0] << " " << decompressed[1] << std::endl;
-    for (const auto & i: decompressed) {
-        std::cout << i << " ";
-    }
-    std::cout << std::endl;
+    ASSERT_EQ (lorumBytes, decompressed);
 
     std::string msg = { decompressed.begin(), decompressed.end() };
-
-    std::cout << msg << std::endl;
-
+    ASSERT_EQ (lorum, msg);
 }
+
+/**********************************************************************************************************************/
