@@ -7,11 +7,17 @@
 
 ### MacOS
 
-```
+```commandline
 brew install PkgConfig
 brew install glib
 brew install librdkafka
 brew install nlohmann-json 
+```
+
+I needed the following on MacOS 13 running on Apple Silicon.
+
+```commandline
+brew install opensll
 ```
 
 ### Ububtu Linux
@@ -58,11 +64,19 @@ This is a C++ client library for the Corda P2P layer. As such, unsurprisingly, w
 > Note: Building Corda 5 requires Java 11.
 
 # Build
-
+## MacOS
 For pkg-config to find openssl@1.1 you may need to set:
-```
+### Intel
+```commandline
 export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
 ```
+
+### Apple Silicon
+```commandline
+export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig"
+```
+
+
 
 # CLion
 
