@@ -82,7 +82,7 @@ cmake .
 make package
 ```
 
-Then copy the tarball to a convienient location, extract it, and add the bin dir to your path, this includes the avro
+Then copy the tarball to a convenient location, extract it, and add the bin dir to your path, this includes the avro
 generator
 
 
@@ -108,7 +108,7 @@ This is a C++ client library for the Corda P2P layer. As such, unsurprisingly, w
    git checkout p2p-preview
    ```
    
-5. Build the parts we need
+4. Build the parts we need
 
     ```shell
     ./gradlew \
@@ -156,8 +156,8 @@ config parser (json) instead of the glib ".ini" style provided by confluent.
 
 ## example-3
 
-Bi-directional handling over two shared topics where a->b and b->a
+Bidirectional handling over two shared topics where a->b and b->a
 
+## example-4
 
-
-
+## example-5
