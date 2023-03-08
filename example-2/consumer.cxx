@@ -1,9 +1,9 @@
-#include <librdkafka/rdkafkacpp.h>
+#include <memory>
 #include <fstream>
 #include <iostream>
-#include <nlohmann/json.hpp>
 
-#include <iostream>
+#include <librdkafka/rdkafkacpp.h>
+#include <nlohmann/json.hpp>
 
 #include "config.h"
 
@@ -50,7 +50,7 @@ int main (int argc, char **argv) {
 
     // Start polling for messages.
     while (run) {
-        auto msg = consumer->consume(500);
+        auto msg = std::unique_ptr<RdKafka::Message>(consumer->consume(500));
         if (msg->err() != RdKafka::ERR_NO_ERROR) {
             if (msg->err() == RdKafka::ERR__TIMED_OUT) {
                 std::cout << "Waiting..." << std::endl;
@@ -67,12 +67,8 @@ int main (int argc, char **argv) {
             std::cout
                 << "Consumed event from topic "
                 << msg->topic_name() << ": key = " << msg->key()
-                << " value = " << (char *)msg->payload() << std::endl;
-
+                << " value = " << (char *)(msg->payload()) << std::endl;
        }
-
-        // Free the message when we're done.
-        delete (msg);
     }
 
     // Close the consumer: commit final offsets and leave the group.

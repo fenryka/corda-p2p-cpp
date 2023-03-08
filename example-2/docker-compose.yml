@@ -45,7 +45,7 @@ services:
       ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
 
   broker1:
-    image: confluentinc/cp-kafka:6.1.1
+    image: confluentinc/cp-kafka:7.3.2
     restart: "no"
     hostname: broker1
     container_name: broker1
@@ -63,7 +63,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: CLIENT://localhost:9092,INTER_BROKER://broker1:9093
 
   broker2:
-    image: confluentinc/cp-kafka:6.1.1
+    image: confluentinc/cp-kafka:7.3.2
     restart: "no"
     hostname: broker2
     container_name: broker2
@@ -81,7 +81,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: CLIENT://localhost:9094,INTER_BROKER://broker2:9095
 
   broker3:
-    image: confluentinc/cp-kafka:6.1.1
+    image: confluentinc/cp-kafka:7.3.2
     restart: "no"
     hostname: broker3
     container_name: broker3
@@ -116,7 +116,7 @@ services:
 
 
   init-kafka:
-    image: confluentinc/cp-kafka:6.1.1
+    image: confluentinc/cp-kafka:7.3.2
     depends_on:
       - broker1
       - broker2
@@ -127,10 +127,10 @@ services:
           "
           # blocks until kafka is reachable
           kafka-topics --bootstrap-server broker1:9093 --list
-          
+
           echo -e 'Creating kafka topics'
           kafka-topics --bootstrap-server broker1:9093 --create --if-not-exists --topic my-topic-1 --replication-factor 2 --partitions 1
-          
+
           echo -e 'Successfully created the following topics:'
           kafka-topics --bootstrap-server broker1:9093 --list
           "
