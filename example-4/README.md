@@ -15,8 +15,7 @@ make
 
 ## Build Artifacts
 
-* producer
-* consumer
+* ***corda-id**:* executable to run for each identity. 
 
 # Setup
 
