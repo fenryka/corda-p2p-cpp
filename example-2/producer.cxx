@@ -60,8 +60,8 @@ int main (int argc, char **argv) {
     for (int i = 0; i < message_count; i++) {
         const char *key =  user_ids[arc4random() % ARR_SIZE(user_ids)];
         const char *value =  products[arc4random() % ARR_SIZE(products)];
-        size_t key_len = strlen(key);
-        size_t value_len = strlen(value);
+        auto key_len = strlen(key);
+        auto value_len = strlen(value);
 
         auto ktopic = RdKafka::Topic::create(producer, topic, conf, errstr);
         auto err = producer->produce(ktopic, RdKafka::Topic::PARTITION_UA,

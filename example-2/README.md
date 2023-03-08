@@ -2,12 +2,9 @@
 
 # What is it?
 
-This is a very basic Kafka producer / consumer example based on Confluents own. Their 
-documentation for lib rdkafka focusses on the C api and not C++, so thus
-is a basic port of that example to rdkafka++. This is why there is a fair amount
-of Cisms left in, especially around parsing the config and printing to the screen.
-I couldn't be bothered to alter that code, wanting to focus only on switching over
-to the C++ Kafka API.
+Whilst example-1 was a modest re-implementation of the basic kafka example (which uses
+their C API), this example is essneitally the same, but moves it to a more modern C++
+style and convention, whilst example-1 just dealt with the API port.
 
 # Building
 
@@ -20,8 +17,11 @@ make
 
 ## Build Artifacts
 
-* producer
-* consumer
+* producer2
+* consumer2
+
+> ***NOTE*** **:** If I could work out how to make cmake namespace build targets to allow
+> multiple targets with the same name, these would have better names
 
 # Setup
 
