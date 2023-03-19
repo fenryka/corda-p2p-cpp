@@ -4,7 +4,7 @@ set (libname corda-p2p)
 
 set (source-files
         config.cxx
-        identity.cxx
+        Identity.cxx
         X500.cxx
         CordaAvroSerializable.cxx
         SchemaBuilder.cxx
